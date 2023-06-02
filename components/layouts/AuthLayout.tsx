@@ -11,7 +11,7 @@ export default function AuthLayout({ children, heading, description }: Props) {
         <div>
           <img
             src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81okqmUGTG9YOoa34NsZd4dG0MXoh805rcLZs4SMgqA6p0tI9dVkxlwQp5aljcZCHwtwAUOltSHr3OyL3UTmnZy3-_0UfQ=s1600"
-            className="mx-auto" style="width:auto; height:140px;"
+            className="mx-auto" style={{width: "auto", height: "140px"}}
             alt="SaasHQ"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
