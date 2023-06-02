@@ -134,6 +134,7 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 ## Coming Soon
 
 - Database per project
+- Database management
 - Billing & subscriptions
 - Roles and Permissions
 - Unit and integration tests
