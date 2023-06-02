@@ -1,6 +1,6 @@
-# SaasHQ Enterprise SaaS Starter Kit
+![SaasHQ](https://github.com/kubeworkz/saashq/blob/main/public/logo.png)
 
-#### Here's what you get out of the box, see images below 👇👇👇
+# SaasHQ Enterprise SaaS Starter Kit
 
 :warning: **This repository is still in an early stage of development.**
 
