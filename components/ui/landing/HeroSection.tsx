@@ -4,7 +4,7 @@ import Link from 'next/link';
 const HeroSection = () => {
   const { t } = useTranslation('common');
   return (
-    <div className="hero py-52">
+    <div className="hero py-42">
       <div className="hero-content text-center">
         <div className="max-w-7md">
           <img
