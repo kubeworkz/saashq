@@ -1,4 +1,4 @@
-![SaasHQ](https://github.com/kubeworkz/saashq/blob/main/public/logo.png)
+<img src="https://github.com/kubeworkz/saashq/blob/main/public/logo.png" width="300">
 
 # SaasHQ Enterprise SaaS Starter Kit
 
