@@ -1,5 +1,3 @@
-import GithubButton from '@/components/interfaces/Auth/GithubButton';
-import GoogleButton from '@/components/interfaces/Auth/GoogleButton';
 import { AuthLayout } from '@/components/layouts';
 import { InputWithLabel } from '@/components/ui';
 import { getParsedCookie } from '@/lib/cookie';
@@ -20,7 +18,7 @@ import toast from 'react-hot-toast';
 import type { NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
 
-const Login: NextPageWithLayout<
+const ForgotPassword: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ csrfToken, redirectAfterSignIn }) => {
   const { status } = useSession();
@@ -34,28 +32,32 @@ const Login: NextPageWithLayout<
   const formik = useFormik({
     initialValues: {
       email: '',
-      password: '',
     },
     validationSchema: Yup.object().shape({
       email: Yup.string().required().email(),
-      password: Yup.string().required(),
     }),
     onSubmit: async (values) => {
-      const { email, password } = values;
+      const { email } = values;
 
-      const response = await signIn('credentials', {
-        email,
-        password,
-        csrfToken,
-        redirect: false,
-        callbackUrl: redirectAfterSignIn,
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+        }),
       });
 
-      formik.resetForm();
-
-      if (!response?.ok) {
-        toast.error(t('login-error'));
-        return;
+      if (response.ok) {
+        formik.resetForm();
+        toast.success(t('password-reset-link-sent'), {
+          position: 'top-center',
+        });
+      } else {
+        toast.error(t('login-error'), {
+          position: 'top-center',
+        });
       }
     },
   });
@@ -74,17 +76,6 @@ const Login: NextPageWithLayout<
               error={formik.touched.email ? formik.errors.email : undefined}
               onChange={formik.handleChange}
             />
-            <InputWithLabel
-              type="password"
-              label="Password"
-              name="password"
-              placeholder="Password"
-              value={formik.values.password}
-              error={
-                formik.touched.password ? formik.errors.password : undefined
-              }
-              onChange={formik.handleChange}
-            />
           </div>
           <div className="mt-4">
             <Button
@@ -94,49 +85,29 @@ const Login: NextPageWithLayout<
               active={formik.dirty}
               fullWidth
             >
-              {t('sign-in')}
+              {t('email-password-reset-link')}
             </Button>
           </div>
         </form>
-        <div className="divider"></div>
-        <div className="space-y-3">
-          <Link href="/auth/magic-link">
-            <a className="btn-outline btn w-full">
-              &nbsp;{t('sign-in-with-email')}
-            </a>
-          </Link>
-          <Link href="/auth/sso">
-            <a className="btn-outline btn w-full">
-              &nbsp;{t('continue-with-saml-sso')}
-            </a>
-          </Link>
-          <div className="divider">or</div>
-          <GithubButton />
-          <GoogleButton />
-        </div>
       </div>
       <p className="text-center text-sm text-gray-600">
-        {t('dont-have-an-account')}
-        <Link href="/auth/join">
+        {t('already-have-an-account')}
+        <Link href="/auth/login">
           <a className="font-medium text-indigo-600 hover:text-indigo-500">
-            &nbsp;{t('create-a-free-account')}
+            &nbsp;{t('sign-in')}
           </a>
         </Link>
       </p>
-      <p className="text-center text-sm text-gray-600">
-        <Link href="/auth/forgot-password">
-          <a className="font-medium text-indigo-600 hover:text-indigo-500">
-            &nbsp;{t('forgot-password')}
-          </a>
-        </Link>
-      </p>      
     </>
   );
 };
 
-Login.getLayout = function getLayout(page: ReactElement) {
+ForgotPassword.getLayout = function getLayout(page: ReactElement) {
   return (
-    <AuthLayout heading="Welcome back" description="Log in to your account">
+    <AuthLayout
+      heading="Verify your email"
+      description="Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one."
+    >
       {page}
     </AuthLayout>
   );
@@ -158,4 +129,4 @@ export const getServerSideProps = async (
   };
 };
 
-export default Login;
+export default ForgotPassword;
