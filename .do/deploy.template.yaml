@@ -1,10 +1,10 @@
 spec:
-  name: saas-starter-kit
+  name: saashq
   services:
     - name: web
       git:
         branch: main
-        repo_clone_url: https://github.com/boxyhq/saas-starter-kit.git
+        repo_clone_url: https://github.com/kubeworkz/saashq.git
       envs:
         - key: NEXTAUTH_URL
           value: ${APP_URL}
