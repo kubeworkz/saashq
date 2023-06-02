@@ -131,7 +131,7 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 - Internationalization
 - Audit logs
 
-## Coming Soon
+## Roadmap
 
 - Database per project
 - Database management
@@ -139,7 +139,6 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 - Roles and Permissions
 - Unit and integration tests
 - Dark mode
-- Mobile-first UI
 
 ## Contributing
 
