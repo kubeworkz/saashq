@@ -3,7 +3,7 @@
     "amount": "$29.95",
     "currency": "USD",
     "duration": "month",
-    "description": "All plans come with an enterpise-grade Postgres backend with all features enabled.",
+    "description": "All plans come with an enterpise-grade Postgres backend with all features enabled. Including pgvector!",
     "benefits": [
       "Up to 5 projects",
       "Free storage up to 10GB",
@@ -15,7 +15,7 @@
     "amount": "$49.95",
     "currency": "USD",
     "duration": "month",
-    "description": "All plans come with an enterpise-grade Postgres backend with all features enabled.",
+    "description": "All plans come with an enterpise-grade Postgres backend with all features enabled. Including pgvector!",
     "benefits": [
       "Up to 10 projects",
       "Storage up to 50GB",
@@ -27,7 +27,7 @@
     "amount": "$129.95",
     "currency": "USD",
     "duration": "month",
-    "description": "All plans come with an enterpise-grade Postgres backend with all features enabled.",
+    "description": "All plans come with an enterpise-grade Postgres backend with all features enabled. Including pgvector!",
     "benefits": [
       "Up to 100 proejcts",
       "Storage upto 100GB",
