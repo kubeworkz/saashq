@@ -10,7 +10,7 @@ export default function AuthLayout({ children, heading, description }: Props) {
       <div className="w-full max-w-md space-y-8">
         <div>
           <img
-            src="https://github.com/kubeworkz/saashq/blob/main/public/logo.png"
+            src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81okqmUGTG9YOoa34NsZd4dG0MXoh805rcLZs4SMgqA6p0tI9dVkxlwQp5aljcZCHwtwAUOltSHr3OyL3UTmnZy3-_0UfQ=s1600"
             className="mx-auto h-12 w-auto"
             alt="SaasHQ"
           />
