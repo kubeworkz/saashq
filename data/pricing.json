@@ -1,32 +1,38 @@
 [
   {
-    "amount": "30k",
+    "amount": "$29.95",
     "currency": "USD",
     "duration": "month",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    "description": "All plans come with an enterpise-grade Postgres backend with all features enabled.",
     "benefits": [
-      "Up to 20 users.",
-      "Free storage upto 1GB",
-      "Lifetime validity"
+      "Up to 5 projects",
+      "Free storage up to 10GB",
+      "Monthly data backups",
+      "Slack forum support"
     ]
   },
   {
-    "amount": "120k",
+    "amount": "$49.95",
     "currency": "USD",
     "duration": "month",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    "benefits": ["Up to 500 users.", "Storage upto 50GB", "24*7 support"]
+    "description": "All plans come with an enterpise-grade Postgres backend with all features enabled.",
+    "benefits": [
+      "Up to 10 projects",
+      "Storage up to 50GB",
+      "Daily data backups",
+      "24*7 support"
+    ]
   },
   {
-    "amount": "350k",
+    "amount": "$129.95",
     "currency": "USD",
     "duration": "month",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    "description": "All plans come with an enterpise-grade Postgres backend with all features enabled.",
     "benefits": [
-      "Up to 1000 users.",
+      "Up to 100 proejcts",
       "Storage upto 100GB",
-      "24*7 support",
-      "Data backups"
+      "Hourly data backups",
+      "24*7 support"
     ]
   }
 ]
