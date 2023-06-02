@@ -17,7 +17,7 @@ const HeroSection = () => {
                 {t('get-started')}
               </a>
             </Link>
-            <Link href="https://github.com/kubeworkz/saas-starter-kit">
+            <Link href="https://github.com/kubeworkz/saashq">
               <a className="btn-outline btn px-8">GitHub</a>
             </Link>
           </div>
