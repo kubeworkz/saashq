@@ -29,7 +29,7 @@
     "duration": "month",
     "description": "All plans come with an enterpise-grade Postgres backend with all features enabled. Including pgvector!",
     "benefits": [
-      "Up to 100 proejcts",
+      "Up to 100 projects",
       "Storage upto 100GB",
       "Hourly data backups",
       "24*7 support"
