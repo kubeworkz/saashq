@@ -99,7 +99,7 @@ export default function Sidebar() {
                   active={router.pathname === '/settings/password'}
                 />
                 <NavItem
-                  href="#"
+                  href="https://saashq.org"
                   text="Logout"
                   icon={ArrowLeftOnRectangleIcon}
                   onClick={() => signOut()}
