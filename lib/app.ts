@@ -4,7 +4,7 @@ const app = {
   version: packageInfo.version,
   name: 'SaasHQ',
   logoUrl: 'https://www.example.com/logo.png',
-  url: 'http://localhost:3002',
+  url: 'https://saashq.org',
 };
 
 export default app;

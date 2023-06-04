@@ -103,7 +103,7 @@ export default function Sidebar() {
                   text="Logout"
                   icon={ArrowLeftOnRectangleIcon}
                   onClick={() => signOut({ callbackUrl: 'https://saashq.org/' })}
-                  active={false}
+                  active={router.pathname === '/'}
                 />
               </div>
             </div>
