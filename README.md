@@ -139,7 +139,7 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 - Novu Notifications
 - Roles and Permissions
 - Unit and integration tests
-- Dark mode
+- Vector Embedded Search
 
 ## Contributing
 
