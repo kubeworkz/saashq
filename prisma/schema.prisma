@@ -8,6 +8,7 @@ datasource db {
 }
 
 enum Role {
+  SUPERADMIN
   ADMIN
   OWNER
   MEMBER
@@ -108,7 +109,6 @@ model Invitation {
   @@unique([projectId, email])
 }
 
-
 model PasswordReset {
   id            Int      @id @default(autoincrement())
   email         String
@@ -116,4 +116,29 @@ model PasswordReset {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   expiresAt     DateTime
+}
+
+model Product {
+  id              String   @id @default(uuid())
+  name            String
+  image           String?
+  description     String
+  period          String
+  price           Int
+  trialPeriod     Int?     @default(0)
+  attachedRole    String
+  features        String
+  stripeProductId String
+  stripePriceId   String
+  createdAt       DateTime @default(now())
+  User            User[]
+}
+
+model Checkout {
+  id         String   @id @default(uuid())
+  identifier String
+  productId  String
+  userId     String
+  status     String
+  createdAt  DateTime @default(now())
 }
