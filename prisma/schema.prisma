@@ -49,31 +49,22 @@ model VerificationToken {
 }
 
 model User {
-  id               String    @id @default(uuid())
-  name             String
-  email            String    @unique
-  emailVerified    DateTime?
-  password         String
-  image            String?
-  roleId           String?   @default("User")
-  role             Roles?    @relation(fields: [roleId], references: [id])
-  onboarded        Boolean?  @default(false)
-  activeProductId  String?
-  activeProduct    Product?  @relation(fields: [activeProductId], references: [id])
-  stripeCustomerId String?   @default("")  
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @default(now())
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  emailVerified DateTime?
+  password      String
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now())
 
-  projectMembers   ProjectMember[]
-  accounts         Account[]
-  sessions         Session[]
-  invitations      Invitation[]
-
-  @@index([activeProductId])
-  @@index([roleId])  
+  teamMembers TeamMember[]
+  accounts    Account[]
+  sessions    Session[]
+  invitations Invitation[]
 }
 
-model Project {
+model Team {
   id          String   @id @default(uuid())
   name        String
   slug        String   @unique
@@ -82,39 +73,39 @@ model Project {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
 
-  members     ProjectMember[]
+  members     TeamMember[]
   invitations Invitation[]
 }
 
-model ProjectMember {
-  id           String   @id @default(uuid())
-  projectId    String
-  userId       String
-  role         Role     @default(MEMBER)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @default(now())
+model TeamMember {
+  id        String   @id @default(uuid())
+  teamId    String
+  userId    String
+  role      Role     @default(MEMBER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([projectId, userId])
+  @@unique([teamId, userId])
 }
 
 model Invitation {
-  id           String   @id @default(uuid())
-  projectId    String
-  email        String
-  role         Role     @default(MEMBER)
-  token        String   @unique
-  expires      DateTime
-  invitedBy    String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @default(now())
+  id        String   @id @default(uuid())
+  teamId    String
+  email     String
+  role      Role     @default(MEMBER)
+  token     String   @unique
+  expires   DateTime
+  invitedBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   user User @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
-  @@unique([projectId, email])
+  @@unique([teamId, email])
 }
 
 
@@ -125,40 +116,4 @@ model PasswordReset {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   expiresAt     DateTime
-}
-
-
-model Roles {
-  id              String @id @default(uuid())
-  role            String
-  roleDescription String
-  priority        Int    @default(0)
-  User            User[]
-}
-
-
-model Product {
-  id              String   @id @default(uuid())
-  name            String
-  image           String?
-  description     String
-  period          String
-  price           Int
-  trialPeriod     Int?     @default(0)
-  attachedRole    String
-  features        String
-  stripeProductId String
-  stripePriceId   String
-  createdAt       DateTime @default(now())
-  User            User[]
-}
-
-
-model Checkout {
-  id         String   @id @default(uuid())
-  identifier String
-  productId  String
-  userId     String
-  status     String
-  createdAt  DateTime @default(now())
 }
