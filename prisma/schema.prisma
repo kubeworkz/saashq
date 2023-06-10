@@ -49,22 +49,22 @@ model VerificationToken {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  name          String
-  email         String    @unique
-  emailVerified DateTime?
-  password      String
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now())
+  id             String    @id @default(uuid())
+  name           String
+  email          String    @unique
+  emailVerified  DateTime?
+  password       String
+  image          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now())
 
-  teamMembers TeamMember[]
-  accounts    Account[]
-  sessions    Session[]
-  invitations Invitation[]
+  projectMembers ProjectMember[]
+  accounts       Account[]
+  sessions       Session[]
+  invitations    Invitation[]
 }
 
-model Team {
+model Project {
   id          String   @id @default(uuid())
   name        String
   slug        String   @unique
@@ -73,39 +73,39 @@ model Team {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
 
-  members     TeamMember[]
+  members     ProjectMember[]
   invitations Invitation[]
 }
 
-model TeamMember {
-  id        String   @id @default(uuid())
-  teamId    String
-  userId    String
-  role      Role     @default(MEMBER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+model ProjectMember {
+  id           String   @id @default(uuid())
+  projectId    String
+  userId       String
+  role         Role     @default(MEMBER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
 
-  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([teamId, userId])
+  @@unique([projectId, userId])
 }
 
 model Invitation {
-  id        String   @id @default(uuid())
-  teamId    String
-  email     String
-  role      Role     @default(MEMBER)
-  token     String   @unique
-  expires   DateTime
-  invitedBy String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id           String   @id @default(uuid())
+  projectId    String
+  email        String
+  role         Role     @default(MEMBER)
+  token        String   @unique
+  expires      DateTime
+  invitedBy    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
 
   user User @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
-  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  @@unique([teamId, email])
+  @@unique([projectId, email])
 }
 
 
