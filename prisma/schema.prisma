@@ -56,7 +56,7 @@ model User {
   password         String
   image            String?
   roleId           String?   @default("User")
-  role             Role?     @relation(fields: [roleId], references: [id])
+  role             Roles?    @relation(fields: [roleId], references: [id])
   onboarded        Boolean?  @default(false)
   activeProductId  String?
   activeProduct    Product?  @relation(fields: [activeProductId], references: [id])
@@ -128,7 +128,7 @@ model PasswordReset {
 }
 
 
-model Role {
+model Roles {
   id              String @id @default(uuid())
   role            String
   roleDescription String
