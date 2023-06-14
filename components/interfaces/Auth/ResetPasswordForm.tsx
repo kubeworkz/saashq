@@ -1,17 +1,20 @@
 import { InputWithLabel } from '@/components/ui';
+import { getAxiosError } from '@/lib/common';
+import axios from 'axios';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Button } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { ApiResponse } from 'types';
 import * as Yup from 'yup';
 
-export const ResetPasswordForm = () => {
+const ResetPasswordForm = () => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const router = useRouter();
   const { t } = useTranslation('common');
-  const { token } = router.query;
+  const { token } = router.query as { token: string };
 
   const formik = useFormik({
     initialValues: {
@@ -28,33 +31,19 @@ export const ResetPasswordForm = () => {
     onSubmit: async (values) => {
       setSubmitting(true);
 
-      const { password } = values;
-
       try {
-        const response = await fetch('/api/auth/reset-password', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ token, password }),
+        await axios.post<ApiResponse>('/api/auth/reset-password', {
+          ...values,
+          token,
         });
-        if (response.ok) {
-          formik.resetForm();
-          router.push('/auth/login');
-          toast.success(t('password-updated'), {
-            position: 'top-center',
-          });
-        } else {
-          const responseBody = await response.json();
-          toast.error(t(responseBody.error.message), {
-            position: 'top-center',
-          });
-        }
-      } catch (error) {
-        console.error(error);
-      }
 
-      setSubmitting(false);
+        setSubmitting(false);
+        formik.resetForm();
+        toast.success(t('password-updated'));
+        router.push('/auth/login');
+      } catch (error: any) {
+        toast.error(getAxiosError(error));
+      }
     },
   });
 
@@ -64,18 +53,18 @@ export const ResetPasswordForm = () => {
         <div className="space-y-2">
           <InputWithLabel
             type="password"
-            label="New Password"
+            label={t('new-password')}
             name="password"
-            placeholder="New Password"
+            placeholder={t('new-password')}
             value={formik.values.password}
             error={formik.touched.password ? formik.errors.password : undefined}
             onChange={formik.handleChange}
           />
           <InputWithLabel
             type="password"
-            label="Confirm Password"
+            label={t('confirm-password')}
             name="confirmPassword"
-            placeholder="Confirm Password"
+            placeholder={t('confirm-password')}
             value={formik.values.confirmPassword}
             error={
               formik.touched.confirmPassword
@@ -93,10 +82,12 @@ export const ResetPasswordForm = () => {
             active={formik.dirty}
             fullWidth
           >
-            Reset Password
+            {t('reset-password')}
           </Button>
         </div>
       </form>
     </div>
   );
 };
+
+export default ResetPasswordForm;

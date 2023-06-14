@@ -44,12 +44,13 @@ export function Navbar(_props: {
                 />
               </svg>
             </button>
-            <a
-              href="/"
-              className="flex items-center text-xl font-bold lg:ml-2.5"
-            >
-              <span className="self-center whitespace-nowrap">{app.name}</span>
-            </a>
+            <div className="flex items-center text-xl font-bold lg:ml-2.5">
+              <Link href="/">
+                <span className="self-center whitespace-nowrap">
+                  {app.name}
+                </span>
+              </Link>
+            </div>
           </div>
           <div>
             <button
