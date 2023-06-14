@@ -1,4 +1,3 @@
-import { ProjectTab } from '@/components/interfaces/Project';
 import { Card } from '@/components/ui';
 import { Error, Loading } from '@/components/ui';
 import env from '@/lib/env';

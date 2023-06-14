@@ -3,6 +3,7 @@ import { getAxiosError } from '@/lib/common';
 import { Project } from '@prisma/client';
 import axios from 'axios';
 import { useFormik } from 'formik';
+import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { Button } from 'react-daisyui';
@@ -12,6 +13,7 @@ import * as Yup from 'yup';
 
 const ProjectSettings = ({ project }: { project: Project }) => {
   const router = useRouter();
+  const { t } = useTranslation('common');
 
   const formik = useFormik({
     initialValues: {
@@ -37,7 +39,7 @@ const ProjectSettings = ({ project }: { project: Project }) => {
         const { data: projectUpdated } = response.data;
 
         if (projectUpdated) {
-          toast.success('Successfully updated!');
+          toast.success(t('successfully-updated'));
           return router.push(`/projects/${projectUpdated.slug}/settings`);
         }
       } catch (error: any) {
@@ -49,29 +51,29 @@ const ProjectSettings = ({ project }: { project: Project }) => {
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
-        <Card heading="Project Settings">
+        <Card heading={t('project-settings')}>
           <Card.Body className="px-3 py-3">
             <div className="flex flex-col">
               <InputWithLabel
                 name="name"
-                label="Display name"
-                descriptionText="A human-friendly name for the project"
+                label={t('project-name')}
+                descriptionText={t('project-name')}
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 error={formik.errors.name}
               />
               <InputWithLabel
                 name="slug"
-                label="Project slug"
-                descriptionText="A unique ID used to identify this project"
+                label={t('project-slug')}
+                descriptionText={t('project-slug-description')}
                 value={formik.values.slug}
                 onChange={formik.handleChange}
                 error={formik.errors.slug}
               />
               <InputWithLabel
                 name="domain"
-                label="Domain"
-                descriptionText="Domain name for the project"
+                label={t('project-domain')}
+                descriptionText={t('project-domain')}
                 value={formik.values.domain ? formik.values.domain : ''}
                 onChange={formik.handleChange}
                 error={formik.errors.domain}
@@ -88,7 +90,7 @@ const ProjectSettings = ({ project }: { project: Project }) => {
                 className="text-white"
                 size="sm"
               >
-                Save Changes
+                {t('save-changes')}
               </Button>
             </div>
           </Card.Footer>

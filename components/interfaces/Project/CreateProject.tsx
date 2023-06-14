@@ -60,7 +60,7 @@ const CreateProject = ({
                 className="flex-grow"
                 onChange={formik.handleChange}
                 value={formik.values.name}
-                placeholder="Project name"
+                placeholder={t('project-name')}
               />
             </div>
           </div>

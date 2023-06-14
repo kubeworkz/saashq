@@ -12,6 +12,7 @@ import { ApiResponse } from 'types';
 const Projects = () => {
   const { isLoading, isError, projects, mutateProjects } = useProjects();
   const { t } = useTranslation('common');
+  
   if (isLoading) {
     return <Loading />;
   }
