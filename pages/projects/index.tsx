@@ -17,7 +17,6 @@ const AllProjects: NextPageWithLayout = () => {
         <h4>{t('all-projects')}</h4>
         <Button
           color="primary"
-          className="text-white"
           onClick={() => {
             setVisible(!visible);
           }}
