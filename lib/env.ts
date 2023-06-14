@@ -1,7 +1,7 @@
 const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
-  product: 'boxyhq',
+  product: 'saashq',
   redirectAfterSignIn: '/projects/switch',
 
   // SAML Jackson configuration
@@ -55,7 +55,7 @@ const env = {
 
   // Stripe configuration
   stripe: {
-    stripeSecret: `${process.env.STRIPE_SK}`,  
+    stripeSecret: `${process.env.STRIPE_SK}`,
   },
 };
 

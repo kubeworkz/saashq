@@ -79,7 +79,7 @@ const SSO: NextPageWithLayout = () => {
               type="text"
               label="Project slug"
               name="slug"
-              placeholder="boxyhq"
+              placeholder="saashq"
               value={formik.values.slug}
               descriptionText="Contact your administrator to get your project slug"
               error={formik.touched.slug ? formik.errors.slug : undefined}
