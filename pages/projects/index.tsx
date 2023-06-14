@@ -16,7 +16,6 @@ const AllProjects: NextPageWithLayout = () => {
       <div className="flex items-center justify-between">
         <h4>{t('all-projects')}</h4>
         <Button
-          size="sm"
           color="primary"
           className="text-white"
           onClick={() => {
