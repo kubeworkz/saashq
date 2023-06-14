@@ -50,19 +50,23 @@ model VerificationToken {
 }
 
 model User {
-  id             String    @id @default(uuid())
-  name           String
-  email          String    @unique
-  emailVerified  DateTime?
-  password       String
-  image          String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @default(now())
+  id               String    @id @default(uuid())
+  name             String
+  email            String    @unique
+  emailVerified    DateTime?
+  password         String
+  activeProductId  String?
+  activeProduct    Product?  @relation(fields: [activeProductId], references: [id])
+  stripeCustomerId String?   @default("")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @default(now())
 
   projectMembers ProjectMember[]
   accounts       Account[]
   sessions       Session[]
   invitations    Invitation[]
+
+  @@index([activeProductId])
 }
 
 model Project {
