@@ -2,7 +2,7 @@ import {
   InviteMember,
   PendingInvitations,
 } from '@/components/interfaces/Invitation';
-import { Members, ProjectTab } from '@/components/interfaces/Project';
+import { Members } from '@/components/interfaces/Project';
 import { Error, Loading } from '@/components/ui';
 import useProject from 'hooks/useProject';
 import { GetServerSidePropsContext } from 'next';
@@ -32,8 +32,6 @@ const ProjectMembers: NextPageWithLayout = () => {
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{project.name}</h3>
-      <ProjectTab project={project} activeTab="members" />
       <div className="flex items-center justify-end">
         <Button
           size="sm"

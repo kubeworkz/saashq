@@ -56,7 +56,7 @@ const Join = () => {
         />
         <InputWithLabel
           type="text"
-          label="Project"
+          label={t('project')}
           name="project"
           placeholder="Project name"
           value={formik.values.project}

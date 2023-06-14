@@ -6,6 +6,8 @@ import Link from 'next/link';
 const ProjectTab = ({ activeTab, project }: { activeTab: string; project: Project }) => {
   const navigations = projectNavigations(project.slug, activeTab);
 
+  return <></>
+
   return (
     <div className="mb-5">
       <nav

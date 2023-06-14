@@ -1,5 +1,4 @@
 import { ConfigureSAML } from '@/components/interfaces/SAML';
-import { ProjectTab } from '@/components/interfaces/Project';
 import { Error, Loading } from '@/components/ui';
 import { Card } from '@/components/ui';
 import useSAMLConfig from 'hooks/useSAMLConfig';
@@ -33,12 +32,10 @@ const ProjectSSO: NextPageWithLayout = () => {
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{project.name}</h3>
-      <ProjectTab project={project} activeTab="saml" />
       <Card heading="SAML Single Sign-On">
         <Card.Body className="px-3 py-3">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-sm">{t('allow-project')}</p>
+            <p className="text-sm">{t('allow-team')}</p>
             <Button
               size="sm"
               onClick={() => setVisible(!visible)}
