@@ -19,7 +19,7 @@ export default function AccountLayout({
 
   return (
     <>
-      <Navbar />
+      <Navbar> </Navbar>
       <div className="flex overflow-hidden pt-16 h-full">
         <Sidebar />
         <div className="relative h-full w-full overflow-y-auto lg:ml-64">

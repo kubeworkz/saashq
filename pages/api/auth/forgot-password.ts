@@ -1,7 +1,6 @@
 import { generatePasswordResetToken, validateEmail } from '@/lib/common';
 import { sendPasswordResetEmail } from '@/lib/email/sendPasswordResetEmail';
 import { prisma } from '@/lib/prisma';
-import { hash } from 'bcryptjs';
 import { NextApiHandler } from 'next';
 
 const handler: NextApiHandler = async (req, res) => {
