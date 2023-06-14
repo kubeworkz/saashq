@@ -98,7 +98,6 @@ const Members = ({ project }: { project: Project }) => {
                   {canRemoveMember(member) && (
                     <td className="px-6 py-3">
                       <Button
-                        size="sm"
                         variant="outline"
                         onClick={() => {
                           removeProjectMember(member);

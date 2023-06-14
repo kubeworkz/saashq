@@ -88,7 +88,6 @@ const ProjectSettings = ({ project }: { project: Project }) => {
                 loading={formik.isSubmitting}
                 disabled={!formik.isValid || !formik.dirty}
                 className="text-white"
-                size="sm"
               >
                 {t('save-changes')}
               </Button>
