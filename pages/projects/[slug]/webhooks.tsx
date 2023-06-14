@@ -1,4 +1,3 @@
-import { ProjectTab } from '@/components/interfaces/Project';
 import { CreateWebhook, Webhooks } from '@/components/interfaces/Webhook';
 import { Error, Loading } from '@/components/ui';
 import useProject from 'hooks/useProject';
@@ -29,8 +28,6 @@ const WebhookList: NextPageWithLayout = () => {
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{project.name}</h3>
-      <ProjectTab project={project} activeTab="webhooks" />
       <div className="flex items-center justify-end">
         <Button
           size="sm"

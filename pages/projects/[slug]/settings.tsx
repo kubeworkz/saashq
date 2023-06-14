@@ -1,7 +1,6 @@
 import {
   RemoveProject,
   ProjectSettings,
-  ProjectTab,
 } from '@/components/interfaces/Project';
 import { Error, Loading } from '@/components/ui';
 import useProject from 'hooks/useProject';
@@ -26,8 +25,6 @@ const Settings: NextPageWithLayout = () => {
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{project.name}</h3>
-      <ProjectTab project={project} activeTab="settings" />
       <ProjectSettings project={project} />
       <RemoveProject project={project} />
     </>

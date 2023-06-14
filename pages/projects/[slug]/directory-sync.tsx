@@ -2,7 +2,6 @@ import {
   CreateDirectory,
   Directory,
 } from '@/components/interfaces/DirectorySync';
-import { ProjectTab } from '@/components/interfaces/Project';
 import { Card } from '@/components/ui';
 import { Error, Loading } from '@/components/ui';
 import useDirectory from 'hooks/useDirectory';
@@ -37,8 +36,6 @@ const DirectorySync: NextPageWithLayout = () => {
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{project.name}</h3>
-      <ProjectTab project={project} activeTab="directory-sync" />
       <Card heading="Directory Sync">
         <Card.Body className="px-3 py-3">
           <div className="mb-3 flex items-center justify-between">
