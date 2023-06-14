@@ -52,6 +52,11 @@ const env = {
     apiKey: process.env.RETRACED_API_KEY,
     projectId: process.env.RETRACED_PROJECT_ID,
   },
+
+  // Stripe configuration
+  stripe: {
+    stripeSecret: `${process.env.STRIPE_SK}`,  
+  },
 };
 
 export default env;

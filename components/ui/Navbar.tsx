@@ -1,4 +1,12 @@
-export default function Navbar() {
+import classNames from "classnames";
+import Link from "next/link";
+
+export function Navbar(_props: {
+  children: any;
+  fixed?: boolean;
+  blurBackground?: boolean;
+  classes?: string;
+}) {
   return (
     <nav className="fixed z-30 w-full border-b border-gray-200 bg-white">
       <div className="px-3 py-3 lg:px-5 lg:pl-3">
@@ -106,3 +114,23 @@ export default function Navbar() {
     </nav>
   );
 }
+
+function Section(props: { children: any, classes?: string; }) {
+  return <div className={classNames("flex items-center gap-4 py-4", props.classes)}>{props.children}</div>;
+}
+
+function NavLink(props: { children: any; href: string }) {
+  return (
+    <Link
+      className="rounded-md px-2 py-1.5 text-sm font-medium tracking-wide text-white duration-200 hover:bg-white/20"
+      href={props.href}
+    >
+      {props.children}
+    </Link>
+  );
+}
+
+Navbar.Link = NavLink;
+Navbar.Section = Section;
+
+export default Navbar;
