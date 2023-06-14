@@ -5,7 +5,7 @@ import { inferSSRProps } from '@/lib/inferSSRProps';
 import { getViewerToken } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import useProject from 'hooks/useProject';
-import { getProject, isProjectAdmin, isProjectMember } from 'models/project';
+import { getProject, isProjectAdmin } from 'models/project';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
