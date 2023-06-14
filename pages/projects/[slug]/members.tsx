@@ -35,7 +35,6 @@ const ProjectMembers: NextPageWithLayout = () => {
       <div className="flex items-center justify-end">
         <Button
           color="primary"
-          className="text-white"
           onClick={() => {
             setVisible(!visible);
           }}

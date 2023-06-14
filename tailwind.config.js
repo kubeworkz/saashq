@@ -7,7 +7,7 @@ module.exports = {
     'node_modules/daisyui/dist/**/*.js',
   ],
   daisyui: {
-    themes: ['winter', 'corporate'],
+    themes: ['corporate'],
   },
   plugins: [
     require('@tailwindcss/forms'),

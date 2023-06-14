@@ -47,7 +47,6 @@ const RemoveProject = ({ project }: { project: Project }) => {
             color="error"
             onClick={removeProject}
             loading={loading}
-            className="text-white"
           >
             {t('remove-project')}
           </Button>
