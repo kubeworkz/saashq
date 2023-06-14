@@ -1,4 +1,4 @@
-import faqs from 'data/faq.json';
+import faqs from './data/faq.json';
 import { useTranslation } from 'next-i18next';
 import { Card } from 'react-daisyui';
 
