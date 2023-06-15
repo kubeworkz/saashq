@@ -15,11 +15,13 @@ export default function AuthLayout({
     <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
-          <img
-            src={app.logoUrl}
-            className="mx-auto h-12 w-auto"
-            alt={app.name}
-          />
+          <a href="/">
+            <img
+              src={app.logoUrl}
+              className="mx-auto" style={{"height": 100}}
+              alt={app.name}
+            />
+          </a>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             {heading}
           </h2>
