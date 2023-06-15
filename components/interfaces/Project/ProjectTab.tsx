@@ -3,15 +3,22 @@ import type { Project } from '@prisma/client';
 import classNames from 'classnames';
 import Link from 'next/link';
 
-const ProjectTab = ({ activeTab, project }: { activeTab: string; project: Project }) => {
+interface ProjectTabProps {
+  activeTab: string;
+  project: Project;
+  heading?: string;
+}
+
+const ProjectTab = (props: ProjectTabProps) => {
+  const { activeTab, project, heading } = props;
+
   const navigations = projectNavigations(project.slug, activeTab);
 
-  return <></>
-
   return (
-    <div className="mb-5">
+    <div className="flex flex-col">
+      <h2 className="text-xl font-semibold mb-2">{heading ? heading : project.name}</h2>
       <nav
-        className="-mb-px flex space-x-5 border-b border-gray-300"
+        className=" flex space-x-5 border-b border-gray-300"
         aria-label="Tabs"
       >
         {navigations.map((menu) => {

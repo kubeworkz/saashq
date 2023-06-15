@@ -88,7 +88,6 @@ const PendingInvitations = ({ project }: { project: Project }) => {
                   <td className="px-6 py-3">
                     <Button
                       variant="outline"
-                      color="secondary"
                       onClick={() => {
                         deleteInvitation(invitation);
                       }}

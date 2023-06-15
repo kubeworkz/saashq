@@ -2,7 +2,7 @@ import {
   InviteMember,
   PendingInvitations,
 } from '@/components/interfaces/Invitation';
-import { Members } from '@/components/interfaces/Project';
+import { Members, ProjectTab } from '@/components/interfaces/Project';
 import { Error, Loading } from '@/components/ui';
 import useProject from 'hooks/useProject';
 import { GetServerSidePropsContext } from 'next';
@@ -32,17 +32,20 @@ const ProjectMembers: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className="flex items-center justify-end">
-        <Button
-          color="primary"
-          onClick={() => {
-            setVisible(!visible);
-          }}
-        >
-          {t('add-member')}
-        </Button>
+      <ProjectTab activeTab="members" project={project} />
+      <div className="flex flex-col">
+        <div className="flex mt-2 justify-end">
+          <Button
+            color="primary"
+            onClick={() => {
+              setVisible(!visible);
+            }}
+          >
+            {t('add-member')}
+          </Button>
+        </div>
+        <Members project={project} />
       </div>
-      <Members project={project} />
       <PendingInvitations project={project} />
       <InviteMember visible={visible} setVisible={setVisible} project={project} />
     </>

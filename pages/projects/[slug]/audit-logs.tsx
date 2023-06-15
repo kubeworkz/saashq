@@ -1,3 +1,4 @@
+import { ProjectTab } from '@/components/interfaces/Project';
 import { Card } from '@/components/ui';
 import { Error, Loading } from '@/components/ui';
 import env from '@/lib/env';
@@ -52,6 +53,7 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 
   return (
     <>
+      <ProjectTab activeTab="audit-logs" project={project} />
       <Card heading="Audit Logs">
         <Card.Body>
           <RetracedEventsBrowser

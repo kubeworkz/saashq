@@ -1,6 +1,7 @@
 import {
   RemoveProject,
   ProjectSettings,
+  ProjectTab,
 } from '@/components/interfaces/Project';
 import { Error, Loading } from '@/components/ui';
 import useProject from 'hooks/useProject';
@@ -11,9 +12,9 @@ import type { NextPageWithLayout } from 'types';
 
 const Settings: NextPageWithLayout = () => {
   const router = useRouter();
-  const { slug } = router.query;
+  const { slug } = router.query as { slug: string };
 
-  const { isLoading, isError, project } = useProject(slug as string);
+  const { isLoading, isError, project } = useProject(slug);
 
   if (isLoading || !project) {
     return <Loading />;
@@ -25,6 +26,7 @@ const Settings: NextPageWithLayout = () => {
 
   return (
     <>
+      <ProjectTab activeTab="settings" project={project} />
       <ProjectSettings project={project} />
       <RemoveProject project={project} />
     </>

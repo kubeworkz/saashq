@@ -2,6 +2,7 @@ import {
   CreateDirectory,
   Directory,
 } from '@/components/interfaces/DirectorySync';
+import { ProjectTab } from '@/components/interfaces/Project';
 import { Card } from '@/components/ui';
 import { Error, Loading } from '@/components/ui';
 import useDirectory from 'hooks/useDirectory';
@@ -36,16 +37,13 @@ const DirectorySync: NextPageWithLayout = () => {
 
   return (
     <>
+      <ProjectTab activeTab="directory-sync" project={project} />
       <Card heading="Directory Sync">
         <Card.Body className="px-3 py-3">
           <div className="mb-3 flex items-center justify-between">
             <p className="text-sm">{t('provision')}</p>
             {directory === null ? (
-              <Button
-                onClick={() => setVisible(!visible)}
-                variant="outline"
-                color="secondary"
-              >
+              <Button onClick={() => setVisible(!visible)} variant="outline">
                 {t('enable')}
               </Button>
             ) : (

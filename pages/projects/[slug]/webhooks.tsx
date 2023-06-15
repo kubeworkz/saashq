@@ -1,3 +1,4 @@
+import { ProjectTab } from '@/components/interfaces/Project';
 import { CreateWebhook, Webhooks } from '@/components/interfaces/Webhook';
 import { Error, Loading } from '@/components/ui';
 import useProject from 'hooks/useProject';
@@ -28,17 +29,20 @@ const WebhookList: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className="flex items-center justify-end">
-        <Button
-          color="primary"
-          onClick={() => {
-            setVisible(!visible);
-          }}
-        >
-          {t('add-webhook')}
-        </Button>
+      <ProjectTab activeTab="webhooks" project={project} />
+      <div className="flex flex-col">
+        <div className="flex mt-2 justify-end">
+          <Button
+            color="primary"
+            onClick={() => {
+              setVisible(!visible);
+            }}
+          >
+            {t('add-webhook')}
+          </Button>
+        </div>
+        <Webhooks project={project} />
       </div>
-      <Webhooks project={project} />
       <CreateWebhook visible={visible} setVisible={setVisible} project={project} />
     </>
   );
