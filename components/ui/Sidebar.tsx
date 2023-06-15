@@ -1,46 +1,20 @@
 import {
-  HashtagIcon,
+  BuildingOfficeIcon,
+  CircleStackIcon,
   HomeIcon,
   LockClosedIcon,
   UserCircleIcon,
-  UsersIcon,
 } from '@heroicons/react/24/outline';
-import useTeam from 'hooks/useProject';
+import useProjects from 'hooks/useProjects';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 
-import TeamNav from '../interfaces/Project/ProjectNav';
 import NavItem from './NavItem';
 
 export default function Sidebar() {
   const router = useRouter();
+  const { projects } = useProjects();
   const { t } = useTranslation('common');
-
-  const { slug } = router.query as { slug: string };
-  const { project } = useTeam(slug);
-
-  const navigation = [
-    {
-      name: t('dashboard'),
-      href: '/dashboard',
-      icon: HomeIcon,
-    },
-    {
-      name: t('projects'),
-      href: '/projects',
-      icon: UsersIcon,
-    },
-    {
-      name: t('account'),
-      href: '/settings/account',
-      icon: UserCircleIcon,
-    },
-    {
-      name: t('password'),
-      href: '/settings/password',
-      icon: LockClosedIcon,
-    },
-  ];
 
   return (
     <>
@@ -50,28 +24,66 @@ export default function Sidebar() {
       >
         <div className="relative flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white pt-0">
           <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
-            <div className="flex-1 space-y-1 divide-y bg-white px-3">
-              <ul className="space-y-2 pb-2">
-                {navigation.map((item) => (
-                  <li key={item.name}>
+            <div className="flex-1 space-y-1 divide-y bg-white">
+              <div className="p-4">
+                <ul className="space-y-1">
+                  <li>
                     <NavItem
-                      href={item.href}
-                      text={item.name}
-                      icon={item.icon}
-                      active={router.pathname === item.href}
+                      href="/dashboard"
+                      text={t('dashboard')}
+                      icon={HomeIcon}
+                      active={router.pathname === '/dashboard'}
                     />
                   </li>
-                ))}
-              </ul>
-              {project && (
-                <div className="space-y-2 pt-2">
-                  <span className="p-2 text-sm font-semibold flex gap-2">
-                    <HashtagIcon className="h-5 w-5" />
-                    {project.name}
-                  </span>
-                  <TeamNav slug={slug} />
-                </div>
-              )}
+                  <li>
+                    <NavItem
+                      href="/products"
+                      text={t('products')}
+                      icon={CircleStackIcon}
+                      active={router.pathname === '/products'}
+                    />
+                  </li>
+                </ul>
+              </div>
+
+              <div className="p-4">
+                <span className="flex text-sm px-2 mb-2">{t('projects')}</span>
+                <ul className="space-y-1">
+                  {projects &&
+                    projects.map((item) => (
+                      <li key={item.name}>
+                        <NavItem
+                          href={`/projects/${item.slug}/settings`}
+                          text={item.name}
+                          icon={BuildingOfficeIcon}
+                          active={router.asPath.includes(`/projects/${item.slug}`)}
+                        />
+                      </li>
+                    ))}
+                </ul>
+              </div>
+
+              <div className="p-4">
+                <span className="flex text-sm px-2 mb-2">{t('account')}</span>
+                <ul className="space-y-1">
+                  <li>
+                    <NavItem
+                      href="/settings/account"
+                      text={t('account-info')}
+                      icon={UserCircleIcon}
+                      active={router.pathname === '/settings/account'}
+                    />
+                  </li>
+                  <li>
+                    <NavItem
+                      href="/settings/password"
+                      text={t('password')}
+                      icon={LockClosedIcon}
+                      active={router.pathname === '/settings/password'}
+                    />
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>

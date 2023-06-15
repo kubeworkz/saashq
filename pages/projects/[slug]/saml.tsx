@@ -1,4 +1,5 @@
 import { CreateConnection } from '@/components/interfaces/SAML';
+import { ProjectTab } from '@/components/interfaces/Project';
 import { Alert, Error, InputWithLabel, Loading } from '@/components/ui';
 import { Card } from '@/components/ui';
 import useSAMLConfig from 'hooks/useSAMLConfig';
@@ -33,6 +34,7 @@ const ProjectSSO: NextPageWithLayout = () => {
 
   return (
     <>
+    <ProjectTab activeTab="saml" project={project} />
       <Card heading={t('configure-singlesignon')}>
         <Card.Body className="px-3 py-3 text-sm">
           <div className="mb-3 flex items-center justify-between">
