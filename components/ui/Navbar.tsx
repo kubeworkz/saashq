@@ -55,7 +55,7 @@ export function Navbar(_props: {
           <div>
             <button
               className="px-2 py-1 text-sm font-semibold"
-              onClick={() => signOut()}
+              onClick={() => signOut({ callbackUrl: 'https://saashq.org/' })}
             >
               Sign Out
             </button>
