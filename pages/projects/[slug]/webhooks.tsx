@@ -1,6 +1,6 @@
-import { ProjectTab } from '@/components/interfaces/Project';
-import { CreateWebhook, Webhooks } from '@/components/interfaces/Webhook';
-import { Error, Loading } from '@/components/ui';
+import { ProjectTab } from '@/components/project';
+import { CreateWebhook, Webhooks } from '@/components/webhook';
+import { Error, Loading } from '@/components/shared';
 import useProject from 'hooks/useProject';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';

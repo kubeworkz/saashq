@@ -1,6 +1,6 @@
-import { ProjectTab } from '@/components/interfaces/Project';
-import { Card } from '@/components/ui';
-import { Error, Loading } from '@/components/ui';
+import { ProjectTab } from '@/components/project';
+import { Card } from '@/components/shared';
+import { Error, Loading } from '@/components/shared';
 import env from '@/lib/env';
 import { inferSSRProps } from '@/lib/inferSSRProps';
 import { getViewerToken } from '@/lib/retraced';

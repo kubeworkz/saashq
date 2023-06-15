@@ -1,7 +1,7 @@
-import { CreateConnection } from '@/components/interfaces/SAML';
-import { ProjectTab } from '@/components/interfaces/Project';
-import { Alert, Error, InputWithLabel, Loading } from '@/components/ui';
-import { Card } from '@/components/ui';
+import { CreateConnection } from '@/components/saml';
+import { ProjectTab } from '@/components/project';
+import { Alert, Error, InputWithLabel, Loading } from '@/components/shared';
+import { Card } from '@/components/shared';
 import useSAMLConfig from 'hooks/useSAMLConfig';
 import useProject from 'hooks/useProject';
 import { GetServerSidePropsContext } from 'next';

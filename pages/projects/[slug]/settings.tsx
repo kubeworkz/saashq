@@ -2,8 +2,8 @@ import {
   RemoveProject,
   ProjectSettings,
   ProjectTab,
-} from '@/components/interfaces/Project';
-import { Error, Loading } from '@/components/ui';
+} from '@/components/project';
+import { Error, Loading } from '@/components/shared';
 import useProject from 'hooks/useProject';
 import type { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
