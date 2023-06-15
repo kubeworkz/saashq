@@ -32,7 +32,8 @@ export function Dashboard(props: { children: any; classes?: string }) {
           <Navbar.Section>
             <Dropdown
               title={
-                <img
+                <Image
+                  alt="User"
                   src={"" + session.data?.user?.image}
                   className="h-8 w-8 rounded-full"
                 />

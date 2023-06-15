@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Input } from "./Input";
+import Image from "next/image";
 
 export function Footer() {
   const [email, setEmail] = useState("");
@@ -8,7 +9,7 @@ export function Footer() {
       <div className="flex flex-col gap-6">
         <div className="flex flex-col items-start lg:flex-row lg:justify-between">
           <a href="../../../" className="text-4xl font-semibold text-slate-800">
-            <img className="h-10" src="../../branding/icon-b.png" />
+            <Image alt="Branding" className="h-10" src="../../branding/icon-b.png" />
           </a>
           <div className="flex flex-col gap-2">
             <a className="text-sm font-medium text-slate-600">
