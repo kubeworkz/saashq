@@ -6,7 +6,7 @@ const { i18n } = require('./next-i18next.config');
 const nextConfig = withTM({
   reactStrictMode: true,
   images: {
-    domains: [],
+    domains: ['lh3.googleusercontent.com'],
   },
   i18n,
 });

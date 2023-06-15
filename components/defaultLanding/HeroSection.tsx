@@ -10,7 +10,10 @@ const HeroSection = () => {
         <div className="max-w-7md">
           <Image
             src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81okqmUGTG9YOoa34NsZd4dG0MXoh805rcLZs4SMgqA6p0tI9dVkxlwQp5aljcZCHwtwAUOltSHr3OyL3UTmnZy3-_0UfQ=s1600"
-            className="mx-auto" style={{width: "auto", height: "140px", padding: "15px"}}
+            className="mx-auto"
+            width={293} 
+            height={150}
+            padding={15}
             alt="SaasHQ"
           />
           <h1 className="text-5xl font-bold"> {t('enterprise-saas-kit')}</h1>
