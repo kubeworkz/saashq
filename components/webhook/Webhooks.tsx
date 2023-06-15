@@ -1,4 +1,4 @@
-import { Card, Error, Loading } from '@/components/ui';
+import { Card, Error, Loading } from '@/components/shared';
 import { Project } from '@prisma/client';
 import axios from 'axios';
 import useWebhooks from 'hooks/useWebhooks';

@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui';
+import { Card } from '@/components/shared';
 import { Project } from '@prisma/client';
 import axios from 'axios';
 import { useTranslation } from 'next-i18next';

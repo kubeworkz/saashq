@@ -1,4 +1,4 @@
-import { Error, Loading } from '@/components/ui';
+import { Error, Loading } from '@/components/shared';
 import { Project } from '@prisma/client';
 import useDirectory from 'hooks/useDirectory';
 import { useTranslation } from 'next-i18next';
