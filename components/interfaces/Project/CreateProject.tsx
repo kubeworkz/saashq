@@ -50,7 +50,7 @@ const CreateProject = ({
   return (
     <Modal open={visible}>
       <form onSubmit={formik.handleSubmit} method="POST">
-        <Modal.Header className="font-bold">Create Project</Modal.Header>
+        <Modal.Header className="font-bold">{t('create-project')}</Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-4">
             <p>{t('members-of-a-project')}</p>
