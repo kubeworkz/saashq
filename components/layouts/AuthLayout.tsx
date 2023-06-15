@@ -1,5 +1,6 @@
 import app from '@/lib/app';
-import Link from 'next/link'
+import Link from 'next/link';
+import Image from 'next/image';
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -17,7 +18,7 @@ export default function AuthLayout({
       <div className="w-full max-w-md space-y-8">
         <div>
           <Link href="/">
-            <img
+            <Image
               src={app.logoUrl}
               className="mx-auto" style={{"height": 100}}
               alt={app.name}

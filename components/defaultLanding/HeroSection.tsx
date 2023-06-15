@@ -1,5 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const HeroSection = () => {
   const { t } = useTranslation('common');
@@ -7,7 +8,7 @@ const HeroSection = () => {
     <div className="hero py-42">
       <div className="hero-content text-center">
         <div className="max-w-7md">
-          <img
+          <Image
             src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81okqmUGTG9YOoa34NsZd4dG0MXoh805rcLZs4SMgqA6p0tI9dVkxlwQp5aljcZCHwtwAUOltSHr3OyL3UTmnZy3-_0UfQ=s1600"
             className="mx-auto" style={{width: "auto", height: "140px", padding: "15px"}}
             alt="SaasHQ"
