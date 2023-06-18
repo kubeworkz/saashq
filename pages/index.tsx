@@ -9,6 +9,7 @@ import Link from 'next/link';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from 'types';
 
+
 const Home: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
 
@@ -26,7 +27,7 @@ const Home: NextPageWithLayout = () => {
               <a>{t('sign-up')}</a>
             </li>
             <li>
-              <a>{t('item-3')}</a>
+            <a>{t('item-3')}</a>
             </li>
           </ul>
         </div>

@@ -7,7 +7,7 @@ import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next';
-import { getCsrfToken, signIn, useSession } from 'next-auth/react';
+import { getCsrfToken, useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
@@ -20,7 +20,7 @@ import * as Yup from 'yup';
 
 const ForgotPassword: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ csrfToken, redirectAfterSignIn }) => {
+> = ({ redirectAfterSignIn }) => {
   const { status } = useSession();
   const router = useRouter();
   const { t } = useTranslation('common');
