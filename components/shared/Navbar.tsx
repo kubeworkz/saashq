@@ -2,13 +2,9 @@ import classNames from "classnames";
 import Link from "next/link";
 import app from '@/lib/app';
 import { signOut } from 'next-auth/react';
+import SwitchTheme from "./SwitchTheme";
 
-export function Navbar(_props: {
-  children: any;
-  fixed?: boolean;
-  blurBackground?: boolean;
-  classes?: string;
-}) {
+export function Navbar() {
   return (
     <nav className="fixed z-30 w-full border-b border-gray-200 bg-white">
       <div className="px-3 py-3 lg:px-5 lg:pl-3">
@@ -51,6 +47,9 @@ export function Navbar(_props: {
                 </span>
               </Link>
             </div>
+          </div>
+          <div>
+            <SwitchTheme />
           </div>
           <div>
             <button

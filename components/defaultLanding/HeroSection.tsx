@@ -13,7 +13,6 @@ const HeroSection = () => {
             className="mx-auto"
             width={293} 
             height={150}
-            padding={15}
             alt="SaasHQ"
           />
           <h1 className="text-5xl font-bold"> {t('enterprise-saas-kit')}</h1>

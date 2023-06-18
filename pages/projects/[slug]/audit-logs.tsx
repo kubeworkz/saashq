@@ -8,7 +8,6 @@ import { getSession } from '@/lib/session';
 import useProject from 'hooks/useProject';
 import { getProject, isProjectAdmin } from 'models/project';
 import { GetServerSidePropsContext } from 'next';
-import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -33,8 +32,7 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 }) => {
   const router = useRouter();
   const { slug } = router.query;
-  const { t } = useTranslation('common');
-
+  
   const { isLoading, isError, project } = useProject(slug as string);
 
   if (isLoading || !project) {
