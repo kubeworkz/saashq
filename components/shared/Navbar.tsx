@@ -2,7 +2,6 @@ import classNames from "classnames";
 import Link from "next/link";
 import app from '@/lib/app';
 import { signOut } from 'next-auth/react';
-import SwitchTheme from "./SwitchTheme";
 
 export function Navbar() {
   return (
@@ -47,9 +46,6 @@ export function Navbar() {
                 </span>
               </Link>
             </div>
-          </div>
-          <div>
-            <SwitchTheme />
           </div>
           <div>
             <button
