@@ -140,6 +140,7 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 - Roles and Permissions
 - Unit and integration tests
 - Vector Embedded Search
+- Filesharing & Analytics
 
 ## Contributing
 

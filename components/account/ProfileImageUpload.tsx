@@ -32,13 +32,15 @@ const ProfileImageUpload = ({ formik }) => {
             <Image
               src={formik.values.image}
               className="w-36 h-36 rounded-full absolute m-auto shadow"
-              alt=""
+              alt="Account Profile"
+              width={144}
+              height={144}
             />
           ) : (
             <Image
               src="/user-default-profile.jpeg"
               className="w-36 h-36 rounded-full absolute m-auto shadow"
-              alt=""
+              alt="Account Profile"
               width={144}
               height={144}
             />
