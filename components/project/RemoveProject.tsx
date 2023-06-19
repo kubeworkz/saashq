@@ -14,7 +14,7 @@ const RemoveProject = ({ project }: { project: Project }) => {
 
   const removeProject = async () => {
     const confirm = window.confirm(
-      'Are you sure you want to remove this project? This action cannot be undone.'
+      'Are you sure you want to remove this project and project database? This action cannot be undone.'
     );
 
     if (!confirm) return;
