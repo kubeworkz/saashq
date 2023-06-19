@@ -134,5 +134,11 @@
   "metadata-xml": "Metadata XML",
   "saml-connection-established": "Single Sign-On connection is enabled for your project.",
   "products": "Products",
-  "account-info": "Account Details"
+  "account-info": "Account Details",
+  "remove-database": "Remove Database",
+  "remove-database-message": "Are you sure you want to remove database?",
+  "remove-button-message": "Remove",
+  "remove-success": "Remove database successful!",
+  "create-database": "Create Database",
+  "create-database-success": "Create Database Successful!"
 }
