@@ -135,6 +135,7 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 
 - [x] Database per project
 - [ ] Database management
+- [ ] Superadmin Dashboard
 - [ ] Billing & subscriptions
 - [ ] Novu Notifications
 - [ ] Roles and Permissions
