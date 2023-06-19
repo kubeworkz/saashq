@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { findOrCreateApp } from '@/lib/svix';
-import { Role, Project } from '@prisma/client';
+import { Project, Role } from '@prisma/client';
 
 export const createProject = async (param: {
   userId: string;
@@ -9,10 +9,12 @@ export const createProject = async (param: {
 }) => {
   const { userId, name, slug } = param;
 
+  const connectionString = process.env.CONNECTION_URL + `${name}`;
   const project = await prisma.project.create({
     data: {
       name,
       slug,
+      connectionString,
     },
   });
 
@@ -49,7 +51,10 @@ export const addProjectMember = async (
   });
 };
 
-export const removeProjectMember = async (projectId: string, userId: string) => {
+export const removeProjectMember = async (
+  projectId: string,
+  userId: string
+) => {
   return await prisma.projectMember.delete({
     where: {
       projectId_userId: {
@@ -144,5 +149,17 @@ export const isProjectExists = async (condition: any) => {
     where: {
       OR: condition,
     },
+  });
+};
+
+export const updateProjectConnectionString = async (
+  id: string,
+  data: Partial<Project>
+) => {
+  return await prisma.project.update({
+    where: {
+      id,
+    },
+    data: data,
   });
 };
