@@ -69,7 +69,7 @@ const ProjectMembers: NextPageWithLayout = () => {
       <Button
           size="sm"
           color="primary"
-          className="text-white mr-2"
+          className="text-white mr-2 mt-2"
           onClick={
             () => HandleCreateDatabase(project.id)
           }
@@ -80,7 +80,7 @@ const ProjectMembers: NextPageWithLayout = () => {
       <Button
           size="sm"
           color="primary"
-          className="text-white mr-2"
+          className="text-white mr-2 mt-2"
           onClick={() => {
             setVisibleDatabase(!VisibleDatabase);
           }}
@@ -91,7 +91,7 @@ const ProjectMembers: NextPageWithLayout = () => {
         <Button
           size="sm"
           color="primary"
-          className="text-white"
+          className="text-white mt-2"
           onClick={() => {
             setVisible(!visible);
           }}
