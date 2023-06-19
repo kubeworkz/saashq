@@ -133,14 +133,14 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 
 ## Roadmap
 
-- Database per project
-- Database management
-- Billing & subscriptions
-- Novu Notifications
-- Roles and Permissions
-- Unit and integration tests
-- Vector Embedded Search
-- Filesharing & Analytics
+- [x] Database per project
+- [ ] Database management
+- [ ] Billing & subscriptions
+- [ ] Novu Notifications
+- [ ] Roles and Permissions
+- [ ] Unit and integration tests
+- [ ] Vector Embedded Search
+- [ ] Filesharing & Analytics
 
 ## Contributing
 
