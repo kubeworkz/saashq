@@ -1,7 +1,13 @@
 import { slugify } from '@/lib/common';
 import { getSession } from '@/lib/session';
+import {
+  checkForReservedWordOfDatabase,
+  checkLengthOfDatabaseName,
+} from 'knex/knex-validation';
 import { createProject, getProjects, isProjectExists } from 'models/project';
 import type { NextApiRequest, NextApiResponse } from 'next';
+
+import { createDatabase } from '../../../knex/knex.config';
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,10 +43,11 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { name } = req.body;
 
   const session = await getSession(req, res);
+
   const slug = slugify(name);
 
   if (await isProjectExists({ slug })) {
-    return res.status(200).json({
+    return res.status(400).json({
       data: null,
       error: {
         message: 'A project with this name already exists.',
@@ -48,11 +55,30 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  const project = await createProject({
-    userId: session?.user?.id as string,
-    name,
-    slug,
-  });
+  if (await checkLengthOfDatabaseName(name)) {
+    return res.status(400).json({
+      data: null,
+      error: {
+        message: `'${name}' is too long. Please select shorter name.`,
+      },
+    });
+  }
 
-  return res.status(200).json({ data: project, error: null });
+  if (await checkForReservedWordOfDatabase(name)) {
+    return res.status(400).json({
+      data: null,
+      error: {
+        message: `'${name}' is too long. Please select shorter name.`,
+      },
+    });
+  }
+
+  if (await createDatabase(name)) {
+    const project = await createProject({
+      userId: session?.user?.id as string,
+      name,
+      slug,
+    });
+    return res.status(200).json({ data: project, error: null });
+  }
 };
