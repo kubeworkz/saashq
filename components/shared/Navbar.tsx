@@ -2,6 +2,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import app from '@/lib/app';
 import { signOut } from 'next-auth/react';
+import { Button } from 'react-daisyui';
 
 export function Navbar() {
   return (
@@ -48,12 +49,9 @@ export function Navbar() {
             </div>
           </div>
           <div>
-            <button
-              className="px-2 py-1 text-sm font-semibold"
-              onClick={() => signOut({ callbackUrl: 'https://saashq.org/' })}
-            >
-              Sign Out
-            </button>
+           <Button size="sm" variant="outline" onClick={() => signOut()}>
+             Sign Out
+           </Button>  
           </div>
         </div>
       </div>
