@@ -14,27 +14,29 @@ const RemoveProject = ({ project }: { project: Project }) => {
 
   const removeProject = async () => {
     const confirm = window.confirm(
-      'Are you sure you want to remove this project and project database? This action cannot be undone.'
+      'Are you sure you want to remove this project? This action cannot be undone.'
     );
 
     if (!confirm) return;
 
-    setLoading(true);
+    try {
+      setLoading(true);
+      const response = await axios.delete(`/api/projects/${project.slug}`);
+      setLoading(false);
 
-    const response = await axios.delete(`/api/projects/${project.slug}`);
+      const { data, error } = response.data;
 
-    setLoading(false);
+      if (error) {
+          toast.error(error.message);
+          return;
+      }      
 
-    const { data, error } = response.data;
-
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-
-    if (data) {
-      toast.success('Project removed successfully!');
-      return router.push('/projects');
+      if (data) {
+        toast.success('Project removed successfully!');
+        return router.push('/projects');
+      } 
+    } catch(error: any) {
+      toast.error(`Project will not delete as Database ${project.slug} doesn't exists.`);
     }
   };
 
@@ -45,8 +47,10 @@ const RemoveProject = ({ project }: { project: Project }) => {
           <p className="text-sm">{t('remove-project-warning')}</p>
           <Button
             color="error"
+            size="sm"
             onClick={removeProject}
             loading={loading}
+            className="text-white"
           >
             {t('remove-project')}
           </Button>
