@@ -80,5 +80,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       slug,
     });
     return res.status(200).json({ data: project, error: null });
+  } else {
+    return res.status(400).json({
+      data: null,
+      error: { message: `Database '${name}' is already exist.` },
+    });
   }
 };
