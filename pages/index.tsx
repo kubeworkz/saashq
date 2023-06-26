@@ -9,7 +9,6 @@ import Link from 'next/link';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from 'types';
 
-
 const Home: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
 
