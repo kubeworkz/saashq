@@ -52,6 +52,8 @@ const env = {
     projectId: process.env.RETRACED_PROJECT_ID,
   },
 
+  groupPrefix: process.env.GROUP_PREFIX,
+
   // Stripe configuration
   stripe: {
     stripeSecret: `${process.env.STRIPE_SK}`,

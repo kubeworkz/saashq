@@ -2,8 +2,9 @@ import { verifyPassword } from '@/lib/auth';
 import env from '@/lib/env';
 import { prisma } from '@/lib/prisma';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { Role } from '@prisma/client';
 import { getAccount } from 'models/account';
-import { addProjectMember, getProject } from 'models/project';
+import { addProjectMember, getProject, getProjectRoles } from 'models/project';
 import { createUser, getUser } from 'models/user';
 import NextAuth, { Account, NextAuthOptions, User } from 'next-auth';
 import BoxyHQSAMLProvider from 'next-auth/providers/boxyhq-saml';
@@ -135,18 +136,15 @@ export const authOptions: NextAuthOptions = {
 
         await linkAccount(newUser, account);
 
-        // TODO: Check if the user is already a member of the team before adding
-        const project = await getProject({
-          id: profile.requested.tenant,
-        });
-
-        await addProjectMember(project.id, newUser.id, project.defaultRole);
+        await linkToProject(profile, newUser.id);
       } else {
         const linkedAccount = await getAccount({ userId: existingUser.id });
 
         if (!linkedAccount) {
           await linkAccount(existingUser, account);
         }
+
+        await linkToProject(profile, existingUser.id);
       }
 
       return true;
@@ -155,6 +153,11 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token && session) {
         session.user.id = token.sub as string;
+
+        if (token.sub) {
+          const roles = await getProjectRoles(token.sub as string);
+          (session.user as any).roles = roles;
+        }
       }
 
       return session;
@@ -163,6 +166,36 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default NextAuth(authOptions);
+
+const linkToProject = async (profile: any, userId: string) => {
+  const project = await getProject({
+    id: profile.requested.tenant,
+  });
+
+  // Sort out roles
+  const roles = profile.roles || profile.groups || [];
+  let userRole: Role = project.defaultRole || Role.MEMBER;
+
+  for (let role of roles) {
+    if (env.groupPrefix) {
+      role = role.replace(env.groupPrefix, '');
+    }
+    // Owner > Admin > Member
+    if (
+      role.toUpperCase() === Role.ADMIN &&
+      userRole.toUpperCase() !== Role.OWNER.toUpperCase()
+    ) {
+      userRole = Role.ADMIN;
+      continue;
+    }
+    if (role.toUpperCase() === Role.OWNER) {
+      userRole = Role.OWNER;
+      break;
+    }
+  }
+
+  await addProjectMember(project.id, userId, userRole);
+};
 
 const linkAccount = async (user: User, account: Account) => {
   return await adapter.linkAccount({
