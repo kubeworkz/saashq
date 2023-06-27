@@ -117,8 +117,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Delete an invitation
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { id } = req.body;
-  const { slug } = req.query as { slug: string };
+  const { slug, id } = req.query as { slug: string; id: string };
 
   const session = await getSession(req, res);
 
@@ -138,7 +137,10 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const invitation = await getInvitation({ id });
 
-  if (invitation.invitedBy != session.user.id || invitation.projectId != project.id) {
+  if (
+    invitation.invitedBy != session.user.id ||
+    invitation.projectId != project.id
+  ) {
     return res.status(400).json({
       error: {
         message: "You don't have permission to delete this invitation.",

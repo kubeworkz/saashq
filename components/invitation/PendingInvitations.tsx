@@ -24,12 +24,10 @@ const PendingInvitations = ({ project }: { project: Project }) => {
   }
 
   const deleteInvitation = async (invitation: Invitation) => {
+    const sp = new URLSearchParams({ id: invitation.id });
     const { data: response } = await axios.delete<ApiResponse<unknown>>(
-      `/api/projects/${project.slug}/invitations`,
+      `/api/projects/${project.slug}/invitations?${sp.toString()}`,
       {
-        data: {
-          id: invitation.id,
-        },
         validateStatus: () => true,
       }
     );

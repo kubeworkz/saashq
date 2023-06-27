@@ -9,12 +9,10 @@ export const createProject = async (param: {
 }) => {
   const { userId, name, slug } = param;
 
-  const connectionString = process.env.CONNECTION_URL + `${name}`;
   const project = await prisma.project.create({
     data: {
       name,
       slug,
-      connectionString,
     },
   });
 
@@ -42,11 +40,20 @@ export const addProjectMember = async (
   userId: string,
   role: Role
 ) => {
-  return await prisma.projectMember.create({
-    data: {
-      userId,
+  return await prisma.projectMember.upsert({
+    create: {
       projectId,
+      userId,
       role,
+    },
+    update: {
+      role,
+    },
+    where: {
+      projectId_userId: {
+        projectId,
+        userId,
+      },
     },
   });
 };
@@ -96,6 +103,20 @@ export async function isProjectMember(userId: string, projectId: string) {
     projectMember.role === Role.OWNER ||
     projectMember.role === Role.ADMIN
   );
+}
+
+export async function getProjectRoles(userId: string): Promise<string> {
+  const projectRoles = await prisma.projectMember.findMany({
+    where: {
+      userId,
+    },
+    select: {
+      projectId: true,
+      role: true,
+    },
+  });
+
+  return projectRoles;
 }
 
 // Check if the user is an owner of the project
@@ -149,17 +170,5 @@ export const isProjectExists = async (condition: any) => {
     where: {
       OR: condition,
     },
-  });
-};
-
-export const updateProjectConnectionString = async (
-  id: string,
-  data: Partial<Project>
-) => {
-  return await prisma.project.update({
-    where: {
-      id,
-    },
-    data: data,
   });
 };

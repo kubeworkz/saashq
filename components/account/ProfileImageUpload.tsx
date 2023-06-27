@@ -1,6 +1,6 @@
+import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import React, { ChangeEvent, useRef } from 'react';
-import { useTranslation } from 'next-i18next';
 
 const ProfileImageUpload = ({ formik }) => {
   const { t } = useTranslation('common');
@@ -29,20 +29,22 @@ const ProfileImageUpload = ({ formik }) => {
       <div className="">
         <div className="relative w-36 h-36 mb-4">
           {formik.values.image ? (
-            <Image
+            <img
               src={formik.values.image}
               className="w-36 h-36 rounded-full absolute m-auto shadow"
-              alt="Account Profile"
-              width={144}
-              height={144}
+              alt=""
             />
           ) : (
             <Image
               src="/user-default-profile.jpeg"
               className="w-36 h-36 rounded-full absolute m-auto shadow"
-              alt="Account Profile"
+              alt=""
               width={144}
               height={144}
+              style={{
+                maxWidth: '100%',
+                height: 'auto',
+              }}
             />
           )}
         </div>
