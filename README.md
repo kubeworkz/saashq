@@ -130,6 +130,7 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 - Webhooks & Events
 - Internationalization
 - Audit logs
+- APIKeys generator
 
 ## Roadmap
 
