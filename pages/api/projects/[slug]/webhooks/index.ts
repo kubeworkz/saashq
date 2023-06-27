@@ -68,6 +68,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     data['filterTypes'] = eventTypes;
   }
 
+  if (!app) {
+    return res.status(200).json({
+      data: null,
+      error: { message: 'Bad request.' },
+    });
+  }
+
   const endpoint = await createWebhook(app.id, data);
 
   sendAudit({
@@ -80,7 +87,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).json({ data: endpoint, error: null });
 };
 
-// Get all webhooks created by a project
+// Get all webhooks created by a team
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const slug = req.query.slug as string;
 
@@ -98,7 +105,21 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const app = await findOrCreateApp(project.name, project.id);
 
+  if (!app) {
+    return res.status(200).json({
+      data: null,
+      error: { message: 'Bad request.' },
+    });
+  }
+
   const webhooks = await listWebhooks(app.id);
+
+  if (!webhooks) {
+    return res.status(200).json({
+      data: null,
+      error: { message: 'Bad request.' },
+    });
+  }
 
   return res.status(200).json({ data: webhooks.data, error: null });
 };
@@ -126,6 +147,13 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const app = await findOrCreateApp(project.name, project.id);
+
+  if (!app) {
+    return res.status(200).json({
+      data: null,
+      error: { message: 'Bad request.' },
+    });
+  }
 
   if (app.uid != project.id) {
     return res.status(200).json({
