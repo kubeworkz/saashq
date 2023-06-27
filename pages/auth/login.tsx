@@ -109,10 +109,10 @@ const Login: NextPageWithLayout<
         <div className="divider"></div>
         <div className="space-y-3">
           <Link href="/auth/magic-link" className="btn-outline btn w-full">
-            &nbsp;{t('sign-in-with-email')}
+            {t('sign-in-with-email')}
           </Link>
           <Link href="/auth/sso" className="btn-outline btn w-full">
-            &nbsp;{t('continue-with-saml-sso')}
+            {t('continue-with-saml-sso')}
           </Link>
           <div className="divider">or</div>
           <GithubButton />
@@ -120,12 +120,12 @@ const Login: NextPageWithLayout<
         </div>
       </div>
       <p className="text-center text-sm text-gray-600">
-        {t('dont-have-an-account')}
+        {t('dont-have-an-account')}&nbsp;
         <Link
           href="/auth/join"
           className="font-medium text-indigo-600 hover:text-indigo-500"
         >
-          &nbsp;{t('create-a-free-account')}
+          {t('create-a-free-account')}
         </Link>
       </p>
     </>

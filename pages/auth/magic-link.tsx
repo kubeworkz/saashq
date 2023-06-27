@@ -67,7 +67,7 @@ const Login: NextPageWithLayout<
               type="email"
               label="Email"
               name="email"
-              placeholder="jackson@boxyhq.com"
+              placeholder="saas@saashq.org"
               value={formik.values.email}
               descriptionText="We’ll email you a magic link for a password-free sign in."
               error={formik.touched.email ? formik.errors.email : undefined}
@@ -87,10 +87,10 @@ const Login: NextPageWithLayout<
         <div className="divider"></div>
         <div className="space-y-3">
           <Link href="/auth/login" className="btn-outline btn w-full">
-            &nbsp;{t('sign-in-with-password')}
+            {t('sign-in-with-password')}
           </Link>
           <Link href="/auth/sso" className="btn-outline btn w-full">
-            &nbsp;{t('continue-with-saml-sso')}
+            {t('continue-with-saml-sso')}
           </Link>
         </div>
       </div>
@@ -100,7 +100,7 @@ const Login: NextPageWithLayout<
           href="/auth/join"
           className="font-medium text-indigo-600 hover:text-indigo-500"
         >
-          &nbsp;{t('create-a-free-account')}
+          {t('create-a-free-account')}
         </Link>
       </p>
     </>

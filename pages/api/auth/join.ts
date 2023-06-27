@@ -77,7 +77,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({
       data: null,
       error: {
-        message: `'${name}' is too long. Please select shorter name.`,
+        message: `'${name}' is reserved. Please select another name.`,
       },
     });
   }
