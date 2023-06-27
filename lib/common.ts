@@ -1,8 +1,8 @@
+import { randomUUID } from 'crypto';
 import { enc, lib } from 'crypto-js';
+import moment from 'moment';
 import type { NextApiRequest } from 'next';
-import { randomUUID } from "crypto";
-import moment from "moment";
-import { Session } from "next-auth";
+import { Session } from 'next-auth';
 
 export const createRandomString = (length = 6) => {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -86,11 +86,15 @@ export const validatePassword = (password: string): boolean => {
   return true;
 };
 
+export const copyToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text);
+};
+
 export function formatStripeNumber(theNumber: number | any) {
   if (theNumber === undefined) {
-    return "$0";
+    return '$0';
   }
-  return "$" + theNumber / 100;
+  return '$' + theNumber / 100;
 }
 
 export function formatStripeNumberRaw(theNumber: number | any) {
@@ -103,17 +107,17 @@ export function formatStripeNumberRaw(theNumber: number | any) {
 export function formatAPIResponse(returnToClient: any, session: Session) {
   return {
     time: Date.now(),
-    requestedBy: session.user?.id || "unknown",
+    requestedBy: session.user?.id || 'unknown',
     data: returnToClient,
   };
 }
 
 export function formatUnixDate(date: number) {
-  return moment.unix(date).format("MM/DD/YYYY hh:mm:ssa");
+  return moment.unix(date).format('MM/DD/YYYY hh:mm:ssa');
 }
 export function formatPercentage(partialValue: number, totalValue: number) {
   return (100 * partialValue) / totalValue;
 }
 export function newAPIKey() {
-  return "SECRET" + randomUUID().replaceAll("-", "").toUpperCase();
+  return 'SECRET' + randomUUID().replaceAll('-', '').toUpperCase();
 }

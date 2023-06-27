@@ -6,7 +6,7 @@ import {
   ShieldExclamationIcon,
   UserPlusIcon,
 } from '@heroicons/react/24/outline';
-import { Role, ProjectMember } from '@prisma/client';
+import { ProjectMember, Role } from '@prisma/client';
 import type { User } from 'next-auth';
 
 export const isProjectAdmin = (user: User, members: ProjectMember[]) => {
@@ -59,7 +59,7 @@ export const projectNavigations = (slug: string, activeTab: string) => {
     },
     {
       name: 'API Keys',
-      href: '#',
+      href: `/projects/${slug}/api-keys`,
       active: activeTab === 'api-keys',
       icon: KeyIcon,
     },

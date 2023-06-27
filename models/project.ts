@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { findOrCreateApp } from '@/lib/svix';
-import { Project, Role } from '@prisma/client';
+import { Project, ProjectMember, Role } from '@prisma/client';
 
 export const createProject = async (param: {
   userId: string;
@@ -9,10 +9,12 @@ export const createProject = async (param: {
 }) => {
   const { userId, name, slug } = param;
 
+  const connectionString = process.env.CONNECTION_URL + `${name}`;
   const project = await prisma.project.create({
     data: {
       name,
       slug,
+      connectionString,
     },
   });
 
@@ -105,7 +107,7 @@ export async function isProjectMember(userId: string, projectId: string) {
   );
 }
 
-export async function getProjectRoles(userId: string): Promise<string> {
+export async function getProjectRoles(userId: string) {
   const projectRoles = await prisma.projectMember.findMany({
     where: {
       userId,
@@ -172,3 +174,53 @@ export const isProjectExists = async (condition: any) => {
     },
   });
 };
+
+export const updateProjectConnectionString = async (
+  id: string,
+  data: Partial<Project>
+) => {
+  return await prisma.project.update({
+    where: {
+      id,
+    },
+    data: data,
+  });
+};
+
+export async function hasProjectAccess(
+  params: { userId: string } & ({ projectId: string } | { projectSlug: string })
+) {
+  const { userId } = params;
+
+  let projectMember: ProjectMember | null = null;
+
+  if ('projectId' in params) {
+    projectMember = await prisma.projectMember.findFirst({
+      where: {
+        userId,
+        projectId: params.projectId,
+      },
+    });
+  }
+
+  if ('projectSlug' in params) {
+    projectMember = await prisma.projectMember.findFirst({
+      where: {
+        userId,
+        project: {
+          slug: params.projectSlug,
+        },
+      },
+    });
+  }
+
+  if (projectMember) {
+    return (
+      projectMember.role === Role.MEMBER ||
+      projectMember.role === Role.OWNER ||
+      projectMember.role === Role.ADMIN
+    );
+  }
+
+  return false;
+}

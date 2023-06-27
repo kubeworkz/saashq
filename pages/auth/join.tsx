@@ -42,12 +42,12 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
       </div>
 
       <p className="text-center text-sm text-gray-600">
-        {t('already-have-an-account')}
+        {t('already-have-an-account')}&nbsp;
         <Link
           href="/auth/login"
           className="font-medium text-indigo-600 hover:text-indigo-500"
         >
-          &nbsp;{t('sign-in')}
+          {t('sign-in')}
         </Link>
       </p>
     </>
