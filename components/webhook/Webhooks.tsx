@@ -29,11 +29,10 @@ const Webhooks = ({ project }: { project: Project }) => {
   }
 
   const deleteWebhook = async (webhook: EndpointOut) => {
-    const response = await axios.delete(`/api/projects/${project.slug}/webhooks`, {
-      data: {
-        webhookId: webhook.id,
-      },
-    });
+    const sp = new URLSearchParams({ webhookId: webhook.id });
+    const response = await axios.delete(
+      `/api/projects/${project.slug}/webhooks?${sp.toString()}`
+    );
 
     const { error } = response.data;
 
