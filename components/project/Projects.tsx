@@ -12,7 +12,7 @@ import { ApiResponse } from 'types';
 const Projects = () => {
   const { isLoading, isError, projects, mutateProjects } = useProjects();
   const { t } = useTranslation('common');
-  
+
   if (isLoading) {
     return <Loading />;
   }
@@ -57,16 +57,14 @@ const Projects = () => {
                 return (
                   <tr
                     key={project.id}
-                    className="border-b hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
+                    className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
                   >
                     <td className="px-6 py-3">
                       <Link href={`/projects/${project.slug}/members`}>
-                        <a>
-                          <div className="flex items-center justify-start space-x-2">
-                            <LetterAvatar name={project.name} />
-                            <span className="underline">{project.name}</span>
-                          </div>
-                        </a>
+                        <div className="flex items-center justify-start space-x-2">
+                          <LetterAvatar name={project.name} />
+                          <span className="underline">{project.name}</span>
+                        </div>
                       </Link>
                     </td>
                     <td className="px-6 py-3">{project._count.members}</td>

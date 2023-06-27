@@ -16,8 +16,8 @@ const Home: NextPageWithLayout = () => {
     <div className="container mx-auto">
       <div className="navbar bg-base-100">
         <div className="flex-1">
-          <Link href="/">
-            <a className="btn-ghost btn text-xl normal-case">SaasHQ</a>
+          <Link href="/" className="btn-ghost btn text-xl normal-case">
+            SaasHQ
           </Link>
         </div>
         <div className="flex-none">
