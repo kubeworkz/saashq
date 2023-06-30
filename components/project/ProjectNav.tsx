@@ -42,7 +42,7 @@ const ProjectNav = ({ slug }: { slug: string }) => {
       icon: UserPlusIcon,
     },
     {
-      name: t('audit-logs-menu'),
+      name: t('audit-logs'),
       href: `/projects/${slug}/audit-logs`,
       active: activeTab === 'audit-logs',
       icon: DocumentMagnifyingGlassIcon,

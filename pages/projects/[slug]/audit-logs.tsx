@@ -1,6 +1,6 @@
-import { ProjectTab } from '@/components/project';
 import { Card } from '@/components/shared';
 import { Error, Loading } from '@/components/shared';
+import { ProjectTab } from '@/components/project';
 import env from '@/lib/env';
 import { inferSSRProps } from '@/lib/inferSSRProps';
 import { getViewerToken } from '@/lib/retraced';
@@ -8,6 +8,7 @@ import { getSession } from '@/lib/session';
 import useProject from 'hooks/useProject';
 import { getProject, isProjectAdmin } from 'models/project';
 import { GetServerSidePropsContext } from 'next';
+import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -32,7 +33,8 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 }) => {
   const router = useRouter();
   const { slug } = router.query;
-  
+  const { t } = useTranslation('common');
+
   const { isLoading, isError, project } = useProject(slug as string);
 
   if (isLoading || !project) {
@@ -44,20 +46,18 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   }
 
   if (!auditLogToken) {
-    return (
-      <Error message="Error getting audit log token. Please check your configuration." />
-    );
+    return <Error message={t('error-getting-audit-log-token')} />;
   }
 
   return (
     <>
       <ProjectTab activeTab="audit-logs" project={project} />
-      <Card heading="Audit Logs">
+      <Card heading={t('audit-logs')}>
         <Card.Body>
           <RetracedEventsBrowser
             host={`${retracedHost}/viewer/v1`}
             auditLogToken={auditLogToken}
-            header="Audit Logs"
+            header={t('audit-logs')}
           />
         </Card.Body>
       </Card>
