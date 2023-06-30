@@ -13,10 +13,12 @@ const HeroSection = () => {
           </p>
           <div className="flex items-center justify-center gap-2">
             <Link href="/auth/join" className="btn-primary btn px-8 no-underline">
-              {t('get-started')}
+              <a className="btn-primary btn px-8 no-underline">
+                {t('get-started')}
+              </a>
             </Link>
-            <Link href="https://github.com/kubeworkz/saashq" className="btn-outline btn px-8">
-              GitHub
+            <Link href="https://github.com/kubeworkz/saashq">
+            <a className="btn-outline btn px-8">GitHub</a>
             </Link>
           </div>
         </div>
