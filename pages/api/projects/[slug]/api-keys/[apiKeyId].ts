@@ -1,7 +1,7 @@
 import { ApiError } from '@/lib/errors';
 import { getSession } from '@/lib/session';
-import { deleteApiKey } from 'models/apiKey';
-import { hasProjectAccess } from 'models/project';
+import { createApiKey, fetchApiKeys } from 'models/apiKey';
+import { getProject, hasProjectAccess } from 'models/project';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -12,10 +12,12 @@ export default async function handler(
 
   try {
     switch (method) {
-      case 'DELETE':
-        return await handleDELETE(req, res);
+      case 'GET':
+        return await handleGET(req, res);
+      case 'POST':
+        return await handlePOST(req, res);
       default:
-        res.setHeader('Allow', ['DELETE']);
+        res.setHeader('Allow', 'GET, POST');
         res.status(405).json({
           data: null,
           error: { message: `Method ${method} Not Allowed` },
@@ -29,15 +31,15 @@ export default async function handler(
   }
 }
 
-// Delete an API key
-const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
+// Get API keys
+const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    throw new Error('Unauthorized');
+    throw new ApiError(401, 'Unauthorized.');
   }
 
-  const { slug, apiKeyId } = req.query as { slug: string; apiKeyId: string };
+  const { slug } = req.query as { slug: string };
 
   if (
     !(await hasProjectAccess({ userId: session.user.id, projectSlug: slug }))
@@ -45,7 +47,34 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new ApiError(403, 'You are not allowed to perform this action');
   }
 
-  await deleteApiKey(apiKeyId);
+  const project = await getProject({ slug });
+  const apiKeys = await fetchApiKeys(project.id);
 
-  return res.json({ data: {} });
+  return res.json({ data: apiKeys });
+};
+
+// Create an API key
+const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await getSession(req, res);
+
+  if (!session) {
+    throw new ApiError(401, 'Unauthorized.');
+  }
+
+  const { slug } = req.query as { slug: string };
+  const { name } = JSON.parse(req.body) as { name: string };
+
+  if (
+    !(await hasProjectAccess({ userId: session.user.id, projectSlug: slug }))
+  ) {
+    throw new ApiError(403, 'You are not allowed to perform this action');
+  }
+
+  const project = await getProject({ slug });
+  const apiKey = await createApiKey({
+    name,
+    projectId: project.id,
+  });
+
+  return res.status(201).json({ data: { apiKey } });
 };
