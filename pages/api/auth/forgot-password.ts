@@ -35,14 +35,14 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   const token = generatePasswordResetToken();
-  const expirationDate = new Date(Date.now() + 60 * 60 * 1000); // expires in 1 hour
-  const passwordReset = await prisma.passwordReset.create({
-    data: {
-      email,
-      token,
-      expiresAt: expirationDate,
-    },
-  });
+  //const expirationDate = new Date(Date.now() + 60 * 60 * 1000); // expires in 1 hour
+  //const passwordReset = await prisma.passwordReset.create({
+  //  data: {
+  //    email,
+  //    token,
+  //    expiresAt: expirationDate,
+  //  },
+  //});
   try {
     await sendPasswordResetEmail(email, encodeURIComponent(token));
     res.status(200).json({ message: 'Password reset email sent' });
