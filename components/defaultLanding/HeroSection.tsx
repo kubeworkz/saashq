@@ -8,6 +8,7 @@ const HeroSection = () => {
     <div className="hero py-42">
       <div className="hero-content text-center">
         <div className="max-w-7md">
+          {/* My logo */}
           <Image
             src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81okqmUGTG9YOoa34NsZd4dG0MXoh805rcLZs4SMgqA6p0tI9dVkxlwQp5aljcZCHwtwAUOltSHr3OyL3UTmnZy3-_0UfQ=s1600"
             className="p-15"
