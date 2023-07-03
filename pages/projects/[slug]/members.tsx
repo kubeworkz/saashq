@@ -1,10 +1,8 @@
 import RemoveDatabase from '@/components/database/RemoveDatabase';
-import {
-  InviteMember,
-  PendingInvitations,
-} from '@/components/invitation';
-import { Members, ProjectTab } from '@/components/project';
 import { Error, Loading } from '@/components/shared';
+import { InviteMember, PendingInvitations } from '@/components/invitation';
+import { Members, ProjectTab } from '@/components/project';
+
 import { getAxiosError } from '@/lib/common';
 import axios from 'axios';
 import useProject from 'hooks/useProject';
