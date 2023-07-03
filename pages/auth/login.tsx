@@ -108,11 +108,15 @@ const Login: NextPageWithLayout<
         </form>
         <div className="divider"></div>
         <div className="space-y-3">
-          <Link href="/auth/magic-link" className="btn-outline btn w-full">
-            {t('sign-in-with-email')}
+          <Link href="/auth/magic-link">
+            <a className="btn-outline btn w-full">
+              {t('sign-in-with-email')}
+            </a>
           </Link>
-          <Link href="/auth/sso" className="btn-outline btn w-full">
-            {t('continue-with-saml-sso')}
+          <Link href="/auth/sso">
+            <a className="btn-outline btn w-full">
+              {t('continue-with-saml-sso')}
+            </a>  
           </Link>
           <div className="divider">or</div>
           <GithubButton />
