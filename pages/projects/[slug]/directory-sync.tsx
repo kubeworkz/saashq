@@ -1,10 +1,7 @@
-import {
-  CreateDirectory,
-  Directory,
-} from '@/components/directorySync';
-import { ProjectTab } from '@/components/project';
+import { CreateDirectory, Directory } from '@/components/directorySync';
 import { Card } from '@/components/shared';
 import { Error, Loading } from '@/components/shared';
+import { ProjectTab } from '@/components/project';
 import useDirectory from 'hooks/useDirectory';
 import useProject from 'hooks/useProject';
 import { GetServerSidePropsContext } from 'next';
@@ -43,8 +40,13 @@ const DirectorySync: NextPageWithLayout = () => {
           <div className="mb-3 flex items-center justify-between">
             <p className="text-sm">{t('provision')}</p>
             {directory === null ? (
-              <Button onClick={() => setVisible(!visible)} variant="outline">
-                {t('enable')}
+              <Button
+                onClick={() => setVisible(!visible)}
+                variant="outline"
+                color="primary"
+                size="sm"
+              >
+                {t('configure')}
               </Button>
             ) : (
               <Button
