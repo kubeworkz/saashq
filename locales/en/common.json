@@ -160,7 +160,10 @@
   "copied-to-clipboard": "Copied to clipboard",
   "api-key": "API Key",
   "error-getting-audit-log-token": "Error getting audit log token. Please check your configuration.",
-  "remove-team-confirmation": "Are you sure you want to delete the project? Deleting the project will delete all resources and data associated with the project forever.",
+  "remove-project-confirmation": "Are you sure you want to delete the project? Deleting the project will delete all resources and data associated with the project forever.",
   "project-removed-successfully": "Project removed successfully.",
-  "leave-project-confirmation": "Are you sure you want to leave the project? You'll lose access to all resources and data associated with the project."
+  "leave-project-confirmation": "Are you sure you want to leave the project? You'll lose access to all resources and data associated with the project.",
+  "all-products": "All Products",
+  "new-project": "New Project",
+  "profile": "Profile"
 }  
