@@ -19,7 +19,7 @@ const AllProjects: NextPageWithLayout = () => {
     if (newProject) {
       setVisible(true);
     }
-  }, [router.query]);
+  }, [router.query, newProject]);
   
   return (
     <>

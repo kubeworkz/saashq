@@ -138,13 +138,13 @@ const ProjectDropdown = () => {
       name: '',
       items: [
         {
-          id: 'all-projects',
+          id: t('all-projects'),
           name: t('all-projects'),
           href: '/projects',
           icon: RectangleStackIcon,
         },
         {
-          id: 'new-project',
+          id: t('new-project'),
           name: t('new-project'),
           href: '/projects?newProject=true',
           icon: FolderPlusIcon,
