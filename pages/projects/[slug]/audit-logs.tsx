@@ -1,12 +1,12 @@
-import { ProjectTab } from '@/components/interfaces/Project';
-import { Card } from '@/components/ui';
-import { Error, Loading } from '@/components/ui';
+import { Card } from '@/components/shared';
+import { Error, Loading } from '@/components/shared';
+import { ProjectTab } from '@/components/project';
 import env from '@/lib/env';
 import { inferSSRProps } from '@/lib/inferSSRProps';
 import { getViewerToken } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import useProject from 'hooks/useProject';
-import { getProject, isProjectAdmin, isProjectMember } from 'models/project';
+import { getProject, isProjectAdmin } from 'models/project';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -46,21 +46,18 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   }
 
   if (!auditLogToken) {
-    return (
-      <Error message="Error getting audit log token. Please check your configuration." />
-    );
+    return <Error message={t('error-getting-audit-log-token')} />;
   }
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{project.name}</h3>
-      <ProjectTab project={project} activeTab="audit-logs" />
-      <Card heading="Audit Logs">
+      <ProjectTab activeTab="audit-logs" project={project} />
+      <Card heading={t('audit-logs')}>
         <Card.Body>
           <RetracedEventsBrowser
             host={`${retracedHost}/viewer/v1`}
             auditLogToken={auditLogToken}
-            header="Audit Logs"
+            header={t('audit-logs')}
           />
         </Card.Body>
       </Card>

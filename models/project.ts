@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { findOrCreateApp } from '@/lib/svix';
-import { Role, Project } from '@prisma/client';
+import { Project, ProjectMember, Role } from '@prisma/client';
 
 export const createProject = async (param: {
   userId: string;
@@ -9,10 +9,12 @@ export const createProject = async (param: {
 }) => {
   const { userId, name, slug } = param;
 
+  const connectionString = process.env.CONNECTION_URL + `${name}`;
   const project = await prisma.project.create({
     data: {
       name,
       slug,
+      connectionString,
     },
   });
 
@@ -40,16 +42,28 @@ export const addProjectMember = async (
   userId: string,
   role: Role
 ) => {
-  return await prisma.projectMember.create({
-    data: {
-      userId,
+  return await prisma.projectMember.upsert({
+    create: {
       projectId,
+      userId,
       role,
+    },
+    update: {
+      role,
+    },
+    where: {
+      projectId_userId: {
+        projectId,
+        userId,
+      },
     },
   });
 };
 
-export const removeProjectMember = async (projectId: string, userId: string) => {
+export const removeProjectMember = async (
+  projectId: string,
+  userId: string
+) => {
   return await prisma.projectMember.delete({
     where: {
       projectId_userId: {
@@ -91,6 +105,20 @@ export async function isProjectMember(userId: string, projectId: string) {
     projectMember.role === Role.OWNER ||
     projectMember.role === Role.ADMIN
   );
+}
+
+export async function getProjectRoles(userId: string) {
+  const projectRoles = await prisma.projectMember.findMany({
+    where: {
+      userId,
+    },
+    select: {
+      projectId: true,
+      role: true,
+    },
+  });
+
+  return projectRoles;
 }
 
 // Check if the user is an owner of the project
@@ -146,3 +174,53 @@ export const isProjectExists = async (condition: any) => {
     },
   });
 };
+
+export const updateProjectConnectionString = async (
+  id: string,
+  data: Partial<Project>
+) => {
+  return await prisma.project.update({
+    where: {
+      id,
+    },
+    data: data,
+  });
+};
+
+export async function hasProjectAccess(
+  params: { userId: string } & ({ projectId: string } | { projectSlug: string })
+) {
+  const { userId } = params;
+
+  let projectMember: ProjectMember | null = null;
+
+  if ('projectId' in params) {
+    projectMember = await prisma.projectMember.findFirst({
+      where: {
+        userId,
+        projectId: params.projectId,
+      },
+    });
+  }
+
+  if ('projectSlug' in params) {
+    projectMember = await prisma.projectMember.findFirst({
+      where: {
+        userId,
+        project: {
+          slug: params.projectSlug,
+        },
+      },
+    });
+  }
+
+  if (projectMember) {
+    return (
+      projectMember.role === Role.MEMBER ||
+      projectMember.role === Role.OWNER ||
+      projectMember.role === Role.ADMIN
+    );
+  }
+
+  return false;
+}

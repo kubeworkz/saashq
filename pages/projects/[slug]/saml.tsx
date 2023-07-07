@@ -1,7 +1,9 @@
-import { ConfigureSAML } from '@/components/interfaces/SAML';
-import { ProjectTab } from '@/components/interfaces/Project';
-import { Error, Loading } from '@/components/ui';
-import { Card } from '@/components/ui';
+import { CreateConnection } from '@/components/saml';
+import { Alert, Error, InputWithLabel, Loading } from '@/components/shared';
+import { Card } from '@/components/shared';
+import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
+import { ProjectTab } from '@/components/project';
+import type { SAMLSSORecord } from '@boxyhq/saml-jackson';
 import useSAMLConfig from 'hooks/useSAMLConfig';
 import useProject from 'hooks/useProject';
 import { GetServerSidePropsContext } from 'next';
@@ -10,16 +12,49 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Button } from 'react-daisyui';
-import type { NextPageWithLayout } from 'types';
+import { toast } from 'react-hot-toast';
+import type { ApiResponse, NextPageWithLayout } from 'types';
 
 const ProjectSSO: NextPageWithLayout = () => {
-  const { t } = useTranslation('common');
   const router = useRouter();
+  const { t } = useTranslation('common');
+  const [visible, setVisible] = useState(false);
+  const [selectedSsoConnection, setSelectedSsoConnection] =
+    useState<SAMLSSORecord | null>(null);
+  const [confirmationDialogVisible, setConfirmationDialogVisible] =
+    useState(false);
+
   const { slug } = router.query as { slug: string };
 
-  const [visible, setVisible] = useState(false);
   const { isLoading, isError, project } = useProject(slug);
-  const { samlConfig } = useSAMLConfig(slug);
+  const { samlConfig, mutateSamlConfig } = useSAMLConfig(slug);
+  // Delete SSO Connection
+  const deleteSsoConnection = async (connection: SAMLSSORecord | null) => {
+    if (!connection) return;
+    const { clientID, clientSecret } = connection;
+    const params = new URLSearchParams({
+      clientID,
+      clientSecret,
+    });
+    const res = await fetch(`/api/projects/${slug}/saml?${params}`, {
+      method: 'DELETE',
+    });
+
+    const { data, error } = (await res.json()) as ApiResponse<null>;
+
+    setSelectedSsoConnection(null);
+    setConfirmationDialogVisible(false);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    if (data) {
+      mutateSamlConfig();
+      toast.success('SSO Connection deleted successfully');
+    }
+  };
 
   if (isLoading || !project) {
     return <Loading />;
@@ -29,53 +64,123 @@ const ProjectSSO: NextPageWithLayout = () => {
     return <Error />;
   }
 
-  const connectionExists = samlConfig && 'idpMetadata' in samlConfig.config;
+  const connectionsAdded =
+    samlConfig?.connections && samlConfig.connections.length > 0;
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{project.name}</h3>
-      <ProjectTab project={project} activeTab="saml" />
-      <Card heading="SAML Single Sign-On">
-        <Card.Body className="px-3 py-3">
-          <div className="mb-3 flex items-center justify-between">
-            <p className="text-sm">{t('allow-project')}</p>
+      <ProjectTab activeTab="saml" project={project} />
+      {connectionsAdded && (
+        <div className="flex flex-col">
+          <div className="flex mt-2 justify-end">
             <Button
-              size="sm"
-              onClick={() => setVisible(!visible)}
-              variant="outline"
-              color="secondary"
+              color="primary"
+              onClick={() => {
+                setVisible(!visible);
+              }}
             >
-              {t('configure')}
+              {t('add-connection')}
             </Button>
           </div>
-          {connectionExists && (
-            <div className="flex flex-col justify-between space-y-2 border-t text-sm">
-              <p className="mt-3 text-sm">{t('identity-provider')}</p>
-              <div className="form-control w-full">
-                <label className="label">
-                  <span className="label-text">{t('entity-id')}</span>
-                </label>
-                <input
-                  type="text"
-                  className="input-bordered input w-full"
-                  defaultValue={samlConfig.issuer}
-                />
-              </div>
-              <div className="form-control w-full">
-                <label className="label">
-                  <span className="label-text">ACS URL</span>
-                </label>
-                <input
-                  type="text"
-                  className="input-bordered input w-full"
-                  defaultValue={samlConfig.acs}
-                />
-              </div>
+
+          <Card heading={t('project-connections')}>
+            <Card.Body>
+              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+                <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    {/* <th scope="col" className="px-6 py-3">
+                    {t('name')}
+                  </th> */}
+                    <th scope="col" className="px-6 py-3">
+                      {t('provider')}
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      {t('actions')}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {connectionsAdded &&
+                    samlConfig?.connections.map((connection) => {
+                      return (
+                        <tr
+                          key={connection.clientID}
+                          className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
+                        >
+                          <td className="px-6 py-3">
+                            {connection.idpMetadata.friendlyProviderName ||
+                              connection.idpMetadata.provider}
+                          </td>
+                          <td className="px-6 py-3">
+                            <Button
+                              size="xs"
+                              color="error"
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedSsoConnection(connection);
+                                setConfirmationDialogVisible(true);
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          </td>
+                          {/* <td className="px-6 py-3">{connection.product}</td> */}
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </Card.Body>
+          </Card>
+        </div>
+      )}
+      <Card heading={t('configure-singlesignon')}>
+        <Card.Body className="px-3 py-3 text-sm">
+          {!connectionsAdded && (
+            <div className="mb-3 flex items-center justify-between">
+              <p>{t('allow-project')}</p>
+              <Button
+                onClick={() => setVisible(!visible)}
+                variant="outline"
+                size="sm"
+                color="primary"
+              >
+                {t('configure')}
+              </Button>
             </div>
+          )}
+          {connectionsAdded && (
+            <>
+              <Alert status="success">{t('saml-connection-established')}</Alert>
+              <div className="flex flex-col justify-between space-y-2 mt-4">
+                <p>{t('identity-provider')}</p>
+                <InputWithLabel
+                  label={t('entity-id')}
+                  defaultValue={samlConfig.issuer}
+                  className="w-full text-sm"
+                />
+                <InputWithLabel
+                  label={t('acs-url')}
+                  defaultValue={samlConfig.acs}
+                  className="w-full text-sm"
+                />
+              </div>
+            </>
           )}
         </Card.Body>
       </Card>
-      <ConfigureSAML project={project} visible={visible} setVisible={setVisible} />
+      <CreateConnection project={project} visible={visible} setVisible={setVisible} />
+      <ConfirmationDialog
+        title="Delete SSO Connection"
+        visible={confirmationDialogVisible}
+        onConfirm={() => deleteSsoConnection(selectedSsoConnection)}
+        onCancel={() => setConfirmationDialogVisible(false)}
+        cancelText="Cancel"
+        confirmText="Delete SSO Connection"
+      >
+        Are you sure you want to delete this SSO Connection? This action can not
+        be undone.
+      </ConfirmationDialog>
     </>
   );
 };

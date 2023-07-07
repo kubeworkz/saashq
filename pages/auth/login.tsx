@@ -1,7 +1,7 @@
-import GithubButton from '@/components/interfaces/Auth/GithubButton';
-import GoogleButton from '@/components/interfaces/Auth/GoogleButton';
+import GithubButton from '@/components/auth/GithubButton';
+import GoogleButton from '@/components/auth/GoogleButton';
 import { AuthLayout } from '@/components/layouts';
-import { InputWithLabel } from '@/components/ui';
+import { InputWithLabel } from '@/components/shared';
 import { getParsedCookie } from '@/lib/cookie';
 import env from '@/lib/env';
 import { useFormik } from 'formik';
@@ -62,7 +62,7 @@ const Login: NextPageWithLayout<
 
   return (
     <>
-      <div className="rounded-md bg-white p-6 shadow-sm">
+      <div className="rounded p-6 border">
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-2">
             <InputWithLabel
@@ -85,6 +85,14 @@ const Login: NextPageWithLayout<
               }
               onChange={formik.handleChange}
             />
+            <p className="text-sm text-gray-600 text-right">
+              <Link
+                href="/auth/forgot-password"
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                {t('forgot-password')}
+              </Link>
+            </p>
           </div>
           <div className="mt-4">
             <Button
@@ -102,13 +110,13 @@ const Login: NextPageWithLayout<
         <div className="space-y-3">
           <Link href="/auth/magic-link">
             <a className="btn-outline btn w-full">
-              &nbsp;{t('sign-in-with-email')}
+              {t('sign-in-with-email')}
             </a>
           </Link>
           <Link href="/auth/sso">
             <a className="btn-outline btn w-full">
-              &nbsp;{t('continue-with-saml-sso')}
-            </a>
+              {t('continue-with-saml-sso')}
+            </a>  
           </Link>
           <div className="divider">or</div>
           <GithubButton />
@@ -116,20 +124,14 @@ const Login: NextPageWithLayout<
         </div>
       </div>
       <p className="text-center text-sm text-gray-600">
-        {t('dont-have-an-account')}
-        <Link href="/auth/join">
-          <a className="font-medium text-indigo-600 hover:text-indigo-500">
-            &nbsp;{t('create-a-free-account')}
-          </a>
+        {t('dont-have-an-account')}&nbsp;
+        <Link
+          href="/auth/join"
+          className="font-medium text-indigo-600 hover:text-indigo-500"
+        >
+          {t('create-a-free-account')}
         </Link>
       </p>
-      <p className="text-center text-sm text-gray-600">
-        <Link href="/auth/forgot-password">
-          <a className="font-medium text-indigo-600 hover:text-indigo-500">
-            &nbsp;{t('forgot-password')}
-          </a>
-        </Link>
-      </p>      
     </>
   );
 };

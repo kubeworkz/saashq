@@ -17,7 +17,7 @@ export default async function handler(
     case 'PUT':
       return handlePUT(req, res);
     default:
-      res.setHeader('Allow', ['GET', 'PUT']);
+      res.setHeader('Allow', 'GET, PUT');
       res.status(405).json({
         data: null,
         error: { message: `Method ${method} Not Allowed` },
@@ -42,6 +42,13 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const app = await findOrCreateApp(project.name, project.id);
+
+  if (!app) {
+    return res.status(200).json({
+      data: null,
+      error: { message: 'Bad request.' },
+    });
+  }
 
   const webhook = await findWebhook(app.id, endpointId as string);
 
@@ -80,6 +87,13 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (eventTypes.length > 0) {
     data['filterTypes'] = eventTypes;
+  }
+
+  if (!app) {
+    return res.status(200).json({
+      data: null,
+      error: { message: 'Bad request.' },
+    });
   }
 
   const webhook = await updateWebhook(app.id, endpointId as string, data);

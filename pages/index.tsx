@@ -1,7 +1,7 @@
-import FAQSection from '@/components/ui/landing/FAQSection';
-import FeatureSection from '@/components/ui/landing/FeatureSection';
-import HeroSection from '@/components/ui/landing/HeroSection';
-import PricingSection from '@/components/ui/landing/PricingSection';
+import FAQSection from '@/components/defaultLanding/FAQSection';
+import FeatureSection from '@/components/defaultLanding/FeatureSection';
+import HeroSection from '@/components/defaultLanding/HeroSection';
+import PricingSection from '@/components/defaultLanding/PricingSection';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -16,8 +16,8 @@ const Home: NextPageWithLayout = () => {
     <div className="container mx-auto">
       <div className="navbar bg-base-100">
         <div className="flex-1">
-          <Link href="/">
-            <a className="btn-ghost btn text-xl normal-case">SaasHQ</a>
+          <Link href="/" className="btn-ghost btn text-xl normal-case">
+            SaasHQ
           </Link>
         </div>
         <div className="flex-none">
@@ -26,7 +26,7 @@ const Home: NextPageWithLayout = () => {
               <a>{t('sign-up')}</a>
             </li>
             <li>
-              <a>{t('item-3')}</a>
+            <a>{t('item-3')}</a>
             </li>
           </ul>
         </div>

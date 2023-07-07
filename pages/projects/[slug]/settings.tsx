@@ -2,8 +2,8 @@ import {
   RemoveProject,
   ProjectSettings,
   ProjectTab,
-} from '@/components/interfaces/Project';
-import { Error, Loading } from '@/components/ui';
+} from '@/components/project';
+import { Error, Loading } from '@/components/shared';
 import useProject from 'hooks/useProject';
 import type { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -12,9 +12,9 @@ import type { NextPageWithLayout } from 'types';
 
 const Settings: NextPageWithLayout = () => {
   const router = useRouter();
-  const { slug } = router.query;
+  const { slug } = router.query as { slug: string };
 
-  const { isLoading, isError, project } = useProject(slug as string);
+  const { isLoading, isError, project } = useProject(slug);
 
   if (isLoading || !project) {
     return <Loading />;
@@ -26,8 +26,7 @@ const Settings: NextPageWithLayout = () => {
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{project.name}</h3>
-      <ProjectTab project={project} activeTab="settings" />
+      <ProjectTab activeTab="settings" project={project} />
       <ProjectSettings project={project} />
       <RemoveProject project={project} />
     </>

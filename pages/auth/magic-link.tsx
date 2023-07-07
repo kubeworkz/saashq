@@ -1,5 +1,5 @@
 import { AuthLayout } from '@/components/layouts';
-import { InputWithLabel } from '@/components/ui';
+import { InputWithLabel } from '@/components/shared';
 import { getParsedCookie } from '@/lib/cookie';
 import env from '@/lib/env';
 import { useFormik } from 'formik';
@@ -60,14 +60,14 @@ const Login: NextPageWithLayout<
 
   return (
     <>
-      <div className="rounded-md bg-white  p-6 shadow-sm">
+      <div className="rounded p-6 border">
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-2">
             <InputWithLabel
               type="email"
               label="Email"
               name="email"
-              placeholder="jackson@saashq.org"
+              placeholder="saas@saashq.org"
               value={formik.values.email}
               descriptionText="We’ll email you a magic link for a password-free sign in."
               error={formik.touched.email ? formik.errors.email : undefined}
@@ -86,24 +86,21 @@ const Login: NextPageWithLayout<
         </form>
         <div className="divider"></div>
         <div className="space-y-3">
-          <Link href="/auth/login">
-            <a className="btn-outline btn w-full">
-              &nbsp;{t('sign-in-with-password')}
-            </a>
+          <Link href="/auth/login" className="btn-outline btn w-full">
+            {t('sign-in-with-password')}
           </Link>
-          <Link href="/auth/sso">
-            <a className="btn-outline btn w-full">
-              &nbsp;{t('continue-with-saml-sso')}
-            </a>
+          <Link href="/auth/sso" className="btn-outline btn w-full">
+            {t('continue-with-saml-sso')}
           </Link>
         </div>
       </div>
       <p className="text-center text-sm text-gray-600">
         {t('dont-have-an-account')}
-        <Link href="/auth/join">
-          <a className="font-medium text-indigo-600 hover:text-indigo-500">
-            &nbsp;{t('create-a-free-account')}
-          </a>
+        <Link
+          href="/auth/join"
+          className="font-medium text-indigo-600 hover:text-indigo-500"
+        >
+          {t('create-a-free-account')}
         </Link>
       </p>
     </>

@@ -28,7 +28,7 @@ Please follow these simple steps to get a local copy up and running.
 
 ### Prerequisites
 
-- Node.js (Version: >=15.x <17)
+- Node.js (Version: >=18.x)
 - PostgreSQL
 - NPM
 - Docker compose
@@ -130,16 +130,19 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 - Webhooks & Events
 - Internationalization
 - Audit logs
+- APIKeys generator
 
 ## Roadmap
 
-- Database per project
-- Database management
-- Billing & subscriptions
-- Novu Notifications
-- Roles and Permissions
-- Unit and integration tests
-- Vector Embedded Search
+- [x] Database per project
+- [ ] Database management
+- [ ] Superadmin Dashboard
+- [ ] Billing & subscriptions
+- [ ] Novu Notifications
+- [ ] Roles and Permissions
+- [ ] Unit and integration tests
+- [ ] Vector Embedded Search
+- [ ] Filesharing & Analytics
 
 ## Contributing
 

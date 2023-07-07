@@ -1,10 +1,7 @@
-import {
-  CreateDirectory,
-  Directory,
-} from '@/components/interfaces/DirectorySync';
-import { ProjectTab } from '@/components/interfaces/Project';
-import { Card } from '@/components/ui';
-import { Error, Loading } from '@/components/ui';
+import { CreateDirectory, Directory } from '@/components/directorySync';
+import { Card } from '@/components/shared';
+import { Error, Loading } from '@/components/shared';
+import { ProjectTab } from '@/components/project';
 import useDirectory from 'hooks/useDirectory';
 import useProject from 'hooks/useProject';
 import { GetServerSidePropsContext } from 'next';
@@ -37,24 +34,22 @@ const DirectorySync: NextPageWithLayout = () => {
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{project.name}</h3>
-      <ProjectTab project={project} activeTab="directory-sync" />
+      <ProjectTab activeTab="directory-sync" project={project} />
       <Card heading="Directory Sync">
         <Card.Body className="px-3 py-3">
           <div className="mb-3 flex items-center justify-between">
             <p className="text-sm">{t('provision')}</p>
             {directory === null ? (
               <Button
-                size="sm"
                 onClick={() => setVisible(!visible)}
                 variant="outline"
-                color="secondary"
+                color="primary"
+                size="sm"
               >
-                {t('enable')}
+                {t('configure')}
               </Button>
             ) : (
               <Button
-                size="sm"
                 onClick={() => setVisible(!visible)}
                 variant="outline"
                 color="error"

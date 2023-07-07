@@ -1,5 +1,6 @@
 import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
+import { dropDatabase } from 'knex/knex.config';
 import {
   deleteProject,
   getProject,
@@ -23,7 +24,7 @@ export default async function handler(
     case 'DELETE':
       return handleDELETE(req, res);
     default:
-      res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
+      res.setHeader('Allow', 'GET, PUT, DELETE');
       res.status(405).json({
         data: null,
         error: { message: `Method ${method} Not Allowed` },
@@ -108,14 +109,16 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  await deleteProject({ slug });
+  if (await dropDatabase(slug)) {
+    await deleteProject({ slug });
 
-  sendAudit({
-    action: 'project.delete',
-    crud: 'd',
-    user: session.user,
-    project,
-  });
+    sendAudit({
+      action: 'project.delete',
+      crud: 'd',
+      user: session.user,
+      project,
+    });
+  }
 
   return res.status(200).json({ data: {}, error: null });
 };

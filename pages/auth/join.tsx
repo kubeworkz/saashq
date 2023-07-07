@@ -1,7 +1,7 @@
-import GithubButton from '@/components/interfaces/Auth/GithubButton';
-import GoogleButton from '@/components/interfaces/Auth/GoogleButton';
-import Join from '@/components/interfaces/Auth/Join';
-import JoinWithInvitation from '@/components/interfaces/Auth/JoinWithInvitation';
+import GithubButton from '@/components/auth/GithubButton';
+import GoogleButton from '@/components/auth/GoogleButton';
+import Join from '@/components/auth/Join';
+import JoinWithInvitation from '@/components/auth/JoinWithInvitation';
 import { AuthLayout } from '@/components/layouts';
 import { getParsedCookie } from '@/lib/cookie';
 import { inferSSRProps } from '@/lib/inferSSRProps';
@@ -28,7 +28,7 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 
   return (
     <>
-      <div className="rounded-md bg-white p-6 shadow-sm">
+      <div className="rounded p-6 border">
         {inviteToken ? (
           <JoinWithInvitation inviteToken={inviteToken} next={next} />
         ) : (
@@ -42,11 +42,12 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
       </div>
 
       <p className="text-center text-sm text-gray-600">
-        {t('already-have-an-account')}
-        <Link href="/auth/login">
-          <a className="font-medium text-indigo-600 hover:text-indigo-500">
-            &nbsp;{t('sign-in')}
-          </a>
+        {t('already-have-an-account')}&nbsp;
+        <Link
+          href="/auth/login"
+          className="font-medium text-indigo-600 hover:text-indigo-500"
+        >
+          {t('sign-in')}
         </Link>
       </p>
     </>
@@ -57,7 +58,7 @@ Signup.getLayout = function getLayout(page: ReactElement) {
   return (
     <AuthLayout
       heading="Create an account"
-      description="Start your 30-day free trial"
+      description="Start your lifetime free trial"
     >
       {page}
     </AuthLayout>

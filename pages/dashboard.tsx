@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui';
+import { Card } from '@/components/shared';
 import { GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
@@ -7,6 +7,7 @@ import type { NextPageWithLayout } from 'types';
 
 const Dashboard: NextPageWithLayout = () => {
   const { data: session } = useSession();
+  
   const { t } = useTranslation('common');
 
   return (

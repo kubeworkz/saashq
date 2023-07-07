@@ -1,5 +1,5 @@
 import { AuthLayout } from '@/components/layouts';
-import { Error, Loading } from '@/components/ui';
+import { Error, Loading } from '@/components/shared';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
 import useInvitation from 'hooks/useInvitation';
@@ -52,7 +52,7 @@ const AcceptProjectInvitation: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className="rounded-md bg-white p-6 shadow-sm">
+      <div className="rounded p-6 border">
         <div className="flex flex-col items-center space-y-3">
           <h2 className="font-bold">{`${invitation.project.name} ${t(
             'project-invite'
@@ -65,7 +65,6 @@ const AcceptProjectInvitation: NextPageWithLayout = () => {
           {status === 'unauthenticated' ? (
             <>
               <Button
-                color="secondary"
                 variant="outline"
                 fullWidth
                 onClick={() => {
@@ -75,7 +74,6 @@ const AcceptProjectInvitation: NextPageWithLayout = () => {
                 {t('create-a-new-account')}
               </Button>
               <Button
-                color="secondary"
                 variant="outline"
                 fullWidth
                 onClick={() => {

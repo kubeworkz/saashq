@@ -1,6 +1,6 @@
-import { ProjectTab } from '@/components/interfaces/Project';
-import { CreateWebhook, Webhooks } from '@/components/interfaces/Webhook';
-import { Error, Loading } from '@/components/ui';
+import { ProjectTab } from '@/components/project';
+import { CreateWebhook, Webhooks } from '@/components/webhook';
+import { Error, Loading } from '@/components/shared';
 import useProject from 'hooks/useProject';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
@@ -29,21 +29,22 @@ const WebhookList: NextPageWithLayout = () => {
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{project.name}</h3>
-      <ProjectTab project={project} activeTab="webhooks" />
-      <div className="flex items-center justify-end">
-        <Button
-          size="sm"
-          color="primary"
-          className="text-white"
-          onClick={() => {
-            setVisible(!visible);
-          }}
-        >
-          {t('add-webhook')}
-        </Button>
+      <ProjectTab activeTab="webhooks" project={project} />
+      <div className="flex flex-col">
+        <div className="flex mt-2 justify-end">
+          <Button
+            variant="outline"          
+            color="primary"
+            size="sm"            
+            onClick={() => {
+              setVisible(!visible);
+            }}
+          >
+            {t('add-webhook')}
+          </Button>
+        </div>
+        <Webhooks project={project} />
       </div>
-      <Webhooks project={project} />
       <CreateWebhook visible={visible} setVisible={setVisible} project={project} />
     </>
   );
