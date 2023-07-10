@@ -20,15 +20,15 @@ const HeroSection = () => {
           <p className="py-6 text-2xl font-normal">
             {t('kickstart-your-enterprise')}
           </p>
-          <div className="flex items-center justify-center gap-2">
-            <Link 
-              href="/auth/join" 
+          <div className="flex items-center justify-center gap-2 ">
+            <Link
+              href="/auth/join"
               className="btn-primary btn px-8 no-underline"
             >
-                {t('get-started')}
+              {t('get-started')}
             </Link>
-            <Link 
-              href="https://github.com/kubeworkz/saashq"
+            <Link
+              href="https://github.com/boxyhq/saas-starter-kit"
               className="btn-outline btn px-8"
             >
               GitHub
