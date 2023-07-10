@@ -80,9 +80,6 @@ const ProjectSettings = ({ project }: { project: Project }) => {
                 error={formik.errors.domain}
               />
             </div>
-            <div>
-              <SwitchTheme />
-            </div>
           </Card.Body>
           <Card.Footer>
             <div className="flex justify-end">
