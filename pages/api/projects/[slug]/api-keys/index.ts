@@ -13,13 +13,14 @@ export default async function handler(
   try {
     switch (method) {
       case 'GET':
-        return await handleGET(req, res);
+        await handleGET(req, res);
+        break;
       case 'POST':
-        return await handlePOST(req, res);
+        await handlePOST(req, res);
+        break;
       default:
-        res.setHeader('Allow', ['GET', 'POST']);
+        res.setHeader('Allow', 'GET, POST');
         res.status(405).json({
-          data: null,
           error: { message: `Method ${method} Not Allowed` },
         });
     }
@@ -36,7 +37,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    throw new Error('Unauthorized');
+    throw new ApiError(401, 'Unauthorized.');
   }
 
   const { slug } = req.query as { slug: string };
@@ -50,7 +51,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const project = await getProject({ slug });
   const apiKeys = await fetchApiKeys(project.id);
 
-  return res.json({ data: apiKeys });
+  res.json({ data: apiKeys });
 };
 
 // Create an API key
@@ -58,7 +59,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    throw new Error('Unauthorized');
+    throw new ApiError(401, 'Unauthorized.');
   }
 
   const { slug } = req.query as { slug: string };
@@ -76,5 +77,5 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     projectId: project.id,
   });
 
-  return res.status(201).json({ data: { apiKey } });
+  res.status(201).json({ data: { apiKey } });
 };

@@ -1,21 +1,43 @@
 import { hashPassword } from '@/lib/auth';
 import { validatePassword } from '@/lib/common';
 import { prisma } from '@/lib/prisma';
-import { NextApiHandler } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { ApiError } from 'next/dist/server/api-utils';
 
-const handler: NextApiHandler = async (req, res) => {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: { message: 'Method not allowed' } });
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const { method } = req;
+
+  try {
+    switch (method) {
+      case 'POST':
+        await handlePOST(req, res);
+        break;
+      default:
+        res.setHeader('Allow', 'POST');
+        res.status(405).json({
+          error: { message: `Method ${method} Not Allowed` },
+        });
+    }
+  } catch (error: any) {
+    const message = error.message || 'Something went wrong';
+    const status = error.status || 500;
+
+    res.status(status).json({ error: { message } });
   }
+}
 
+const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { token, password } = req.body;
 
   if (!token) {
-    return res.status(422).json({ error: { message: 'Missing token' } });
+    throw new ApiError(422, 'Password reset token is required');
   }
 
   if (!password || !validatePassword(password)) {
-    return res.status(422).json({ error: { message: 'Invalid password' } });
+    throw new ApiError(422, 'Password does not meet requirements');
   }
 
   const passwordReset = await prisma.passwordReset.findUnique({
@@ -23,15 +45,17 @@ const handler: NextApiHandler = async (req, res) => {
   });
 
   if (!passwordReset) {
-    return res.status(422).json({
-      error: { message: 'Password reset token not found or expired' },
-    });
+    throw new ApiError(
+      422,
+      'Invalid password reset token. Please request a new one.'
+    );
   }
 
   if (passwordReset.expiresAt < new Date()) {
-    return res
-      .status(422)
-      .json({ error: { message: 'Password reset token has expired' } });
+    throw new ApiError(
+      422,
+      'Password reset token has expired. Please request a new one.'
+    );
   }
 
   const hashedPassword = await hashPassword(password);
@@ -48,7 +72,5 @@ const handler: NextApiHandler = async (req, res) => {
     }),
   ]);
 
-  res.status(200).json({ message: 'Password updated successfully' });
+  res.status(200).json({ message: 'Password reset successfully' });
 };
-
-export default handler;
