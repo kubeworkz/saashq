@@ -11,7 +11,7 @@ const HeroSection = () => {
           {/* My logo */}
           <Image
             src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81okqmUGTG9YOoa34NsZd4dG0MXoh805rcLZs4SMgqA6p0tI9dVkxlwQp5aljcZCHwtwAUOltSHr3OyL3UTmnZy3-_0UfQ=s1600"
-            className="p-15"
+            className="mx-auto"
             width={274} 
             height={140}
             alt="SaasHQ"
@@ -21,13 +21,17 @@ const HeroSection = () => {
             {t('kickstart-your-enterprise')}
           </p>
           <div className="flex items-center justify-center gap-2">
-            <Link href="/auth/join" className="btn-primary btn px-8 no-underline">
-              <a className="btn-primary btn px-8 no-underline">
+            <Link 
+              href="/auth/join" 
+              className="btn-primary btn px-8 no-underline"
+            >
                 {t('get-started')}
-              </a>
             </Link>
-            <Link href="https://github.com/kubeworkz/saashq">
-            <a className="btn-outline btn px-8">GitHub</a>
+            <Link 
+              href="https://github.com/kubeworkz/saashq"
+              className="btn-outline btn px-8"
+            >
+              GitHub
             </Link>
           </div>
         </div>
