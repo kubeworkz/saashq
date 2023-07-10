@@ -1,6 +1,6 @@
+import { ApiError } from '@/lib/errors';
 import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
-import { dropDatabase } from 'knex/knex.config';
 import {
   deleteProject,
   getProject,
@@ -16,19 +16,28 @@ export default async function handler(
 ) {
   const { method } = req;
 
-  switch (method) {
-    case 'GET':
-      return handleGET(req, res);
-    case 'PUT':
-      return handlePUT(req, res);
-    case 'DELETE':
-      return handleDELETE(req, res);
-    default:
-      res.setHeader('Allow', 'GET, PUT, DELETE');
-      res.status(405).json({
-        data: null,
-        error: { message: `Method ${method} Not Allowed` },
-      });
+  try {
+    switch (method) {
+      case 'GET':
+        await handleGET(req, res);
+        break;
+      case 'PUT':
+        await handlePUT(req, res);
+        break;
+      case 'DELETE':
+        await handleDELETE(req, res);
+        break;
+      default:
+        res.setHeader('Allow', 'GET, PUT, DELETE');
+        res.status(405).json({
+          error: { message: `Method ${method} Not Allowed` },
+        });
+    }
+  } catch (error: any) {
+    const message = error.message || 'Something went wrong';
+    const status = error.status || 500;
+
+    res.status(status).json({ error: { message } });
   }
 }
 
@@ -42,13 +51,10 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const project = await getProject({ slug: slug as string });
 
   if (!(await isProjectMember(userId, project.id))) {
-    return res.status(400).json({
-      data: null,
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(400, 'Bad request');
   }
 
-  return res.status(200).json({ data: project, error: null });
+  res.status(200).json({ data: project });
 };
 
 // Update a project
@@ -58,18 +64,13 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({
-      error: { message: 'Unauthorized.' },
-    });
+    throw new ApiError(401, 'Unauthorized');
   }
 
   const project = await getProject({ slug: slug as string });
 
   if (!(await isProjectOwner(session.user.id, project.id))) {
-    return res.status(400).json({
-      data: null,
-      error: { message: `You don't have permission to do this action.` },
-    });
+    throw new ApiError(400, `You don't have permission to do this action.`);
   }
 
   const updatedProject = await updateProject(slug as string, {
@@ -81,11 +82,11 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   sendAudit({
     action: 'project.update',
     crud: 'u',
-    user: session.user,
+    user: session?.user,
     project,
   });
 
-  return res.status(200).json({ data: updatedProject, error: null });
+  res.status(200).json({ data: updatedProject });
 };
 
 // Delete a project
@@ -95,30 +96,23 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({
-      error: { message: 'Unauthorized.' },
-    });
+    throw new ApiError(401, 'Unauthorized');
   }
 
   const project = await getProject({ slug });
 
   if (!(await isProjectOwner(session.user.id, project.id))) {
-    return res.status(200).json({
-      data: null,
-      error: { message: `You don't have permission to do this action.` },
-    });
+    throw new ApiError(400, `You don't have permission to do this action.`);
   }
 
-  if (await dropDatabase(slug)) {
-    await deleteProject({ slug });
+  await deleteProject({ slug });
 
-    sendAudit({
-      action: 'project.delete',
-      crud: 'd',
-      user: session.user,
-      project,
-    });
-  }
+  sendAudit({
+    action: 'project.delete',
+    crud: 'd',
+    user: session.user,
+    project,
+  });
 
-  return res.status(200).json({ data: {}, error: null });
+  res.status(200).json({ data: {} });
 };
