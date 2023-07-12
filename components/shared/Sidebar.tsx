@@ -44,7 +44,7 @@ export default function Sidebar() {
     ],
     project: [
       {
-        name: t('all-products'),
+        name: t('database'),
         href: `/projects/${slug}/products`,
         icon: CodeBracketIcon,
       },
