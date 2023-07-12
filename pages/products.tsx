@@ -6,7 +6,7 @@ const Products: NextPageWithLayout = () => {
   return (
     <div className="p-3">
       <p className="text-sm">
-        This is just a placeholder for the products page.
+        This is just a placeholder for the database page.
       </p>
     </div>
   );
