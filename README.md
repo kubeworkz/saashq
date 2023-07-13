@@ -139,7 +139,7 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 - [ ] Superadmin Dashboard
 - [ ] Billing & subscriptions
 - [ ] Novu Notifications
-- [ ] Roles and Permissions
+- [x] Roles and Permissions
 - [ ] Unit and integration tests
 - [ ] Vector Embedded Search
 - [ ] Filesharing & Analytics
