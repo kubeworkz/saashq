@@ -1,8 +1,8 @@
 import { ApiError } from '@/lib/errors';
 import { sendAudit } from '@/lib/retraced';
-import { getSession } from '@/lib/session';
 import { findOrCreateApp, findWebhook, updateWebhook } from '@/lib/svix';
-import { getProject, isProjectMember } from 'models/project';
+import { throwIfNoProjectAccess } from 'models/project';
+import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { EndpointIn } from 'svix';
 
@@ -36,24 +36,17 @@ export default async function handler(
 
 // Get a Webhook
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug, endpointId } = req.query as {
-    slug: string;
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_webhook', 'read');
+
+  const { endpointId } = req.query as {
     endpointId: string;
   };
 
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized.');
-  }
-
-  const project = await getProject({ slug });
-
-  if (!(await isProjectMember(session.user.id, project.id))) {
-    throw new ApiError(200, 'Bad request.');
-  }
-
-  const app = await findOrCreateApp(project.name, project.id);
+  const app = await findOrCreateApp(
+    projectMember.project.name,
+    projectMember.project.id
+  );
 
   if (!app) {
     throw new ApiError(200, 'Bad request.');
@@ -66,26 +59,19 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Update a Webhook
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug, endpointId } = req.query as {
-    slug: string;
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_webhook', 'update');
+
+  const { endpointId } = req.query as {
     endpointId: string;
   };
 
   const { name, url, eventTypes } = req.body;
 
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const project = await getProject({ slug: slug as string });
-
-  if (!(await isProjectMember(session.user.id, project.id))) {
-    throw new ApiError(200, 'Bad request.');
-  }
-
-  const app = await findOrCreateApp(project.name, project.id);
+  const app = await findOrCreateApp(
+    projectMember.project.name,
+    projectMember.project.id
+  );
 
   if (!app) {
     throw new ApiError(200, 'Bad request.');
@@ -106,8 +92,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   sendAudit({
     action: 'webhook.update',
     crud: 'u',
-    user: session.user,
-    project,
+    user: projectMember.user,
+    project: projectMember.project,
   });
 
   res.status(200).json({ data: webhook });

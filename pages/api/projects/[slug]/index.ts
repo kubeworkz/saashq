@@ -1,13 +1,11 @@
-import { ApiError } from '@/lib/errors';
 import { sendAudit } from '@/lib/retraced';
-import { getSession } from '@/lib/session';
 import {
   deleteProject,
   getProject,
-  isProjectMember,
-  isProjectOwner,
+  throwIfNoProjectAccess,
   updateProject,
 } from 'models/project';
+import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -43,37 +41,20 @@ export default async function handler(
 
 // Get a project by slug
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query;
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project', 'read');
 
-  const session = await getSession(req, res);
-  const userId = session?.user?.id as string;
-
-  const project = await getProject({ slug: slug as string });
-
-  if (!(await isProjectMember(userId, project.id))) {
-    throw new ApiError(400, 'Bad request');
-  }
+  const project = await getProject({ id: projectMember.projectId });
 
   res.status(200).json({ data: project });
 };
 
 // Update a project
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query;
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project', 'update');
 
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const project = await getProject({ slug: slug as string });
-
-  if (!(await isProjectOwner(session.user.id, project.id))) {
-    throw new ApiError(400, `You don't have permission to do this action.`);
-  }
-
-  const updatedProject = await updateProject(slug as string, {
+  const updatedProject = await updateProject(projectMember.project.slug, {
     name: req.body.name,
     slug: req.body.slug,
     domain: req.body.domain,
@@ -82,8 +63,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   sendAudit({
     action: 'project.update',
     crud: 'u',
-    user: session?.user,
-    project,
+    user: projectMember.user,
+    project: projectMember.project,
   });
 
   res.status(200).json({ data: updatedProject });
@@ -91,27 +72,16 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Delete a project
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const slug = req.query.slug as string;
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project', 'delete');
 
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const project = await getProject({ slug });
-
-  if (!(await isProjectOwner(session.user.id, project.id))) {
-    throw new ApiError(400, `You don't have permission to do this action.`);
-  }
-
-  await deleteProject({ slug });
+  await deleteProject({ id: projectMember.projectId });
 
   sendAudit({
     action: 'project.delete',
     crud: 'd',
-    user: session.user,
-    project,
+    user: projectMember.user,
+    project: projectMember.project,
   });
 
   res.status(200).json({ data: {} });

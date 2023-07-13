@@ -1,7 +1,6 @@
-import { ApiError } from '@/lib/errors';
-import { getSession } from '@/lib/session';
 import { createApiKey, fetchApiKeys } from 'models/apiKey';
-import { getProject, hasProjectAccess } from 'models/project';
+import { throwIfNoProjectAccess } from 'models/project';
+import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -34,47 +33,24 @@ export default async function handler(
 
 // Get API keys
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getSession(req, res);
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_api_key', 'read');
 
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized.');
-  }
-
-  const { slug } = req.query as { slug: string };
-
-  if (
-    !(await hasProjectAccess({ userId: session.user.id, projectSlug: slug }))
-  ) {
-    throw new ApiError(403, 'You are not allowed to perform this action');
-  }
-
-  const project = await getProject({ slug });
-  const apiKeys = await fetchApiKeys(project.id);
+  const apiKeys = await fetchApiKeys(projectMember.projectId);
 
   res.json({ data: apiKeys });
 };
 
 // Create an API key
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getSession(req, res);
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_api_key', 'create');
 
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized.');
-  }
-
-  const { slug } = req.query as { slug: string };
   const { name } = JSON.parse(req.body) as { name: string };
 
-  if (
-    !(await hasProjectAccess({ userId: session.user.id, projectSlug: slug }))
-  ) {
-    throw new ApiError(403, 'You are not allowed to perform this action');
-  }
-
-  const project = await getProject({ slug });
   const apiKey = await createApiKey({
     name,
-    projectId: project.id,
+    projectId: projectMember.projectId,
   });
 
   res.status(201).json({ data: { apiKey } });

@@ -23,7 +23,7 @@ const Projects = () => {
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
   }
 
   const leaveProject = async (project: Project) => {

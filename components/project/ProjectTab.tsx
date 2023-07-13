@@ -1,6 +1,14 @@
-import { projectNavigations } from '@/lib/projects';
+import {
+  Cog6ToothIcon,
+  DocumentMagnifyingGlassIcon,
+  KeyIcon,
+  PaperAirplaneIcon,
+  ShieldExclamationIcon,
+  UserPlusIcon,
+} from '@heroicons/react/24/outline';
 import type { Project } from '@prisma/client';
 import classNames from 'classnames';
+import useCanAccess from 'hooks/useCanAccess';
 import Link from 'next/link';
 
 interface ProjectTabProps {
@@ -12,7 +20,70 @@ interface ProjectTabProps {
 const ProjectTab = (props: ProjectTabProps) => {
   const { activeTab, project, heading } = props;
 
-  const navigations = projectNavigations(project.slug, activeTab);
+  const { canAccess } = useCanAccess();
+
+  const navigations = [
+    {
+      name: 'Settings',
+      href: `/projects/${project.slug}/settings`,
+      active: activeTab === 'settings',
+      icon: Cog6ToothIcon,
+    },
+  ];
+
+  if (canAccess('project_member', ['create', 'update', 'read', 'delete'])) {
+    navigations.push({
+      name: 'Members',
+      href: `/projects/${project.slug}/members`,
+      active: activeTab === 'members',
+      icon: UserPlusIcon,
+    });
+  }
+
+  if (canAccess('project_sso', ['create', 'update', 'read', 'delete'])) {
+    navigations.push({
+      name: 'Single Sign-On',
+      href: `/projects/${project.slug}/saml`,
+      active: activeTab === 'saml',
+      icon: ShieldExclamationIcon,
+    });
+  }
+
+  if (canAccess('project_dsync', ['create', 'update', 'read', 'delete'])) {
+    navigations.push({
+      name: 'Directory Sync',
+      href: `/projects/${project.slug}/directory-sync`,
+      active: activeTab === 'directory-sync',
+      icon: UserPlusIcon,
+    });
+  }
+
+  if (canAccess('project_audit_log', ['create', 'update', 'read', 'delete'])) {
+    navigations.push({
+      name: 'Audit Logs',
+      href: `/projects/${project.slug}/audit-logs`,
+      active: activeTab === 'audit-logs',
+      icon: DocumentMagnifyingGlassIcon,
+    });
+  }
+
+  if (canAccess('project_webhook', ['create', 'update', 'read', 'delete'])) {
+    navigations.push({
+      name: 'Webhooks',
+      href: `/projects/${project.slug}/webhooks`,
+      active: activeTab === 'webhooks',
+      icon: PaperAirplaneIcon,
+    });
+  }
+
+  if (canAccess('project_api_key', ['create', 'update', 'read', 'delete'])) {
+    navigations.push({
+      name: 'API Keys',
+      href: `/projects/${project.slug}/api-keys`,
+      active: activeTab === 'api-keys',
+      icon: KeyIcon,
+    });
+  }
 
   return (
     <div className="flex flex-col">

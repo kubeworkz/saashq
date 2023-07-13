@@ -1,7 +1,7 @@
 import { Card, Error, LetterAvatar, Loading } from '@/components/shared';
-import { isProjectAdmin } from '@/lib/projects';
 import { Project, ProjectMember } from '@prisma/client';
 import axios from 'axios';
+import useCanAccess from 'hooks/useCanAccess';
 import useProjectMembers from 'hooks/useProjectMembers';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
@@ -13,6 +13,7 @@ import UpdateMemberRole from './UpdateMemberRole';
 const Members = ({ project }: { project: Project }) => {
   const { data: session } = useSession();
   const { t } = useTranslation('common');
+  const { canAccess } = useCanAccess();
 
   const { isLoading, isError, members, mutateProjectMembers } = useProjectMembers(
     project.slug
@@ -22,8 +23,8 @@ const Members = ({ project }: { project: Project }) => {
     return <Loading />;
   }
 
-  if (isError || !session) {
-    return <Error />;
+  if (isError) {
+    return <Error message={isError.message} />;
   }
 
   if (!members) {
@@ -40,14 +41,16 @@ const Members = ({ project }: { project: Project }) => {
     toast.success(t('member-deleted'));
   };
 
-  const isAdmin = isProjectAdmin(session.user, members);
-
   const canUpdateRole = (member: ProjectMember) => {
-    return session.user.id != member.userId && isAdmin;
+    return (
+      session?.user.id != member.userId && canAccess('team_member', ['update'])
+    );
   };
 
   const canRemoveMember = (member: ProjectMember) => {
-    return session.user.id != member.userId && isAdmin;
+    return (
+      session?.user.id != member.userId && canAccess('team_member', ['delete'])
+    );
   };
 
   return (
@@ -65,7 +68,7 @@ const Members = ({ project }: { project: Project }) => {
               <th scope="col" className="px-6 py-3">
                 {t('role')}
               </th>
-              {isAdmin && (
+              {canAccess('project_member', ['delete']) && (
                 <th scope="col" className="px-6 py-3">
                   {t('action')}
                 </th>

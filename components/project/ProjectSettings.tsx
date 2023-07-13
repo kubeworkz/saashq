@@ -10,7 +10,8 @@ import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
-import { SwitchTheme } from '@/components/shared';
+
+import { AccessControl } from '../shared/AccessControl';
 
 const ProjectSettings = ({ project }: { project: Project }) => {
   const router = useRouter();
@@ -81,18 +82,20 @@ const ProjectSettings = ({ project }: { project: Project }) => {
               />
             </div>
           </Card.Body>
-          <Card.Footer>
-            <div className="flex justify-end">
-              <Button
-                type="submit"
-                color="primary"
-                loading={formik.isSubmitting}
-                disabled={!formik.isValid || !formik.dirty}
-              >
-                {t('save-changes')}
-              </Button>
-            </div>
-          </Card.Footer>
+          <AccessControl resource="project" actions={['update']}>
+            <Card.Footer>
+              <div className="flex justify-end">
+                <Button
+                  type="submit"
+                  color="primary"
+                  loading={formik.isSubmitting}
+                  disabled={!formik.isValid || !formik.dirty}
+                >
+                  {t('save-changes')}
+                </Button>
+              </div>
+            </Card.Footer>
+          </AccessControl>
         </Card>
       </form>
     </>

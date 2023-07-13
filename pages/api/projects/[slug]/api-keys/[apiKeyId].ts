@@ -1,7 +1,6 @@
-import { ApiError } from '@/lib/errors';
-import { getSession } from '@/lib/session';
 import { deleteApiKey } from 'models/apiKey';
-import { hasProjectAccess } from 'models/project';
+import { throwIfNoProjectAccess } from 'models/project';
+import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -31,19 +30,10 @@ export default async function handler(
 
 // Delete an API key
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getSession(req, res);
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_api_key', 'delete');
 
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const { slug, apiKeyId } = req.query as { slug: string; apiKeyId: string };
-
-  if (
-    !(await hasProjectAccess({ userId: session.user.id, projectSlug: slug }))
-  ) {
-    throw new ApiError(403, 'You are not allowed to perform this action');
-  }
+  const { apiKeyId } = req.query as { apiKeyId: string };
 
   await deleteApiKey(apiKeyId);
 

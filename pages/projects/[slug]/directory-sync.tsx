@@ -21,12 +21,16 @@ const DirectorySync: NextPageWithLayout = () => {
   const { directories } = useDirectory(slug);
   const { t } = useTranslation('common');
 
-  if (isLoading || !project) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!project) {
+    return <Error message="Project not found" />;
   }
 
   const directory =

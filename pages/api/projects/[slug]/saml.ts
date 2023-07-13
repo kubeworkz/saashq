@@ -1,9 +1,8 @@
 import env from '@/lib/env';
-import { ApiError } from '@/lib/errors';
 import jackson from '@/lib/jackson';
 import { sendAudit } from '@/lib/retraced';
-import { getSession } from '@/lib/session';
-import { getProject, isProjectMember } from 'models/project';
+import { throwIfNoProjectAccess } from 'models/project';
+import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -39,24 +38,13 @@ export default async function handler(
 
 // Get the SAML connection for the project.
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query as { slug: string };
-
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized.');
-  }
-
-  const project = await getProject({ slug });
-
-  if (!(await isProjectMember(session.user.id, project.id))) {
-    throw new ApiError(403, 'You are not allowed to perform this action');
-  }
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_sso', 'read');
 
   const { apiController } = await jackson();
 
   const connections = await apiController.getConnections({
-    tenant: project.id,
+    tenant: projectMember.projectId,
     product: env.product,
   });
 
@@ -71,20 +59,10 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Create a SAML connection for the project.
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query as { slug: string };
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_sso', 'create');
+
   const { metadataUrl, encodedRawMetadata } = req.body;
-
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized.');
-  }
-
-  const project = await getProject({ slug });
-
-  if (!(await isProjectMember(session.user.id, project.id))) {
-    throw new ApiError(403, 'You are not allowed to perform this action');
-  }
 
   const { apiController } = await jackson();
 
@@ -93,38 +71,28 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     metadataUrl,
     defaultRedirectUrl: env.saml.callback,
     redirectUrl: env.saml.callback,
-    tenant: project.id,
+    tenant: projectMember.projectId,
     product: env.product,
   });
 
   sendAudit({
     action: 'sso.connection.create',
     crud: 'c',
-    user: session.user,
-    project,
+    user: projectMember.user,
+    project: projectMember.project,
   });
 
   res.status(201).json({ data: connection });
 };
 
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getSession(req, res);
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_sso', 'delete');
 
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized.');
-  }
-
-  const { slug, clientID, clientSecret } = req.query as {
-    slug: string;
+  const { clientID, clientSecret } = req.query as {
     clientID: string;
     clientSecret: string;
   };
-
-  const project = await getProject({ slug });
-
-  if (!(await isProjectMember(session.user.id, project.id))) {
-    throw new ApiError(403, 'You are not allowed to perform this action');
-  }
 
   const { apiController } = await jackson();
 
@@ -133,8 +101,8 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   sendAudit({
     action: 'sso.connection.delete',
     crud: 'c',
-    user: session.user,
-    project,
+    user: projectMember.user,
+    project: projectMember.project,
   });
 
   res.json({ data: {} });

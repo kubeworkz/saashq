@@ -7,7 +7,6 @@ import {
   LockClosedIcon,
   RectangleStackIcon,
   UserCircleIcon,
-  UsersIcon,
 } from '@heroicons/react/24/outline';
 import useProjects from 'hooks/useProjects';
 import { useSession } from 'next-auth/react';
@@ -52,11 +51,6 @@ export default function Sidebar() {
         name: t('settings'),
         href: `/projects/${slug}/settings`,
         icon: Cog6ToothIcon,
-      },
-      {
-        name: t('members'),
-        href: `/projects/${slug}/members`,
-        icon: UsersIcon,
       },
     ],
   };

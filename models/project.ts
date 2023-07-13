@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma';
+import { getSession } from '@/lib/session';
 import { findOrCreateApp } from '@/lib/svix';
-import { Project, ProjectMember, Role } from '@prisma/client';
+import { Project, Role } from '@prisma/client';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const createProject = async (param: {
   userId: string;
@@ -91,22 +93,6 @@ export const getProjects = async (userId: string) => {
   });
 };
 
-// Check if the user is a member of the project
-export async function isProjectMember(userId: string, projectId: string) {
-  const projectMember = await prisma.projectMember.findFirstOrThrow({
-    where: {
-      userId,
-      projectId,
-    },
-  });
-
-  return (
-    projectMember.role === Role.MEMBER ||
-    projectMember.role === Role.OWNER ||
-    projectMember.role === Role.ADMIN
-  );
-}
-
 export async function getProjectRoles(userId: string) {
   const projectRoles = await prisma.projectMember.findMany({
     where: {
@@ -119,18 +105,6 @@ export async function getProjectRoles(userId: string) {
   });
 
   return projectRoles;
-}
-
-// Check if the user is an owner of the project
-export async function isProjectOwner(userId: string, projectId: string) {
-  const projectMember = await prisma.projectMember.findFirstOrThrow({
-    where: {
-      userId,
-      projectId,
-    },
-  });
-
-  return projectMember.role === Role.OWNER;
 }
 
 // Check if the user is an admin or owner of the project
@@ -187,40 +161,51 @@ export const updateProjectConnectionString = async (
   });
 };
 
-export async function hasProjectAccess(
-  params: { userId: string } & ({ projectId: string } | { projectSlug: string })
-) {
-  const { userId } = params;
+// Check if the current user has access to the project
+// Should be used in API routes to check if the user has access to the project
+export const throwIfNoProjectAccess = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  const session = await getSession(req, res);
 
-  let projectMember: ProjectMember | null = null;
+  if (!session) {
+    throw new Error('Unauthorized');
+  }
 
-  if ('projectId' in params) {
-    projectMember = await prisma.projectMember.findFirst({
-      where: {
-        userId,
-        projectId: params.projectId,
+  const projectMember = await getProjectMember(
+    session.user.id,
+    req.query.slug as string
+  );
+
+  if (!projectMember) {
+    throw new Error('You do not have access to this project');
+  }
+
+  return {
+    ...projectMember,
+    user: {
+      ...session.user,
+    },
+  };
+};
+
+// Get the current user's project member object
+export const getProjectMember = async (userId: string, slug: string) => {
+  const projectMember = await prisma.projectMember.findFirstOrThrow({
+    where: {
+      userId,
+      project: {
+        slug,
       },
-    });
-  }
-
-  if ('projectSlug' in params) {
-    projectMember = await prisma.projectMember.findFirst({
-      where: {
-        userId,
-        project: {
-          slug: params.projectSlug,
-        },
+      role: {
+        in: ['ADMIN', 'MEMBER', 'OWNER'],
       },
-    });
-  }
+    },
+    include: {
+      project: true,
+    },
+  });
 
-  if (projectMember) {
-    return (
-      projectMember.role === Role.MEMBER ||
-      projectMember.role === Role.OWNER ||
-      projectMember.role === Role.ADMIN
-    );
-  }
-
-  return false;
-}
+  return projectMember;
+};

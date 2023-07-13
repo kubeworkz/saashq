@@ -15,12 +15,12 @@ const PendingInvitations = ({ project }: { project: Project }) => {
 
   const { t } = useTranslation('common');
 
-  if (isLoading || !invitations) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
   }
 
   const deleteInvitation = async (invitation: Invitation) => {
@@ -42,7 +42,7 @@ const PendingInvitations = ({ project }: { project: Project }) => {
     }
   };
 
-  if (!invitations.length) {
+  if (!invitations || !invitations.length) {
     return null;
   }
 
