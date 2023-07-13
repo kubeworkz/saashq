@@ -52,7 +52,7 @@
     "react-icons": "4.10.1",
     "react-toggle-dark-mode": "^1.1.1",
     "stripe": "^12.9.0",
-    "svix": "0.85.1",
+    "svix": "1.6.0",
     "swr": "2.1.5",
     "tabler-icons-react": "^1.56.0",
     "usehooks-ts": "^2.9.1",
