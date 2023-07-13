@@ -26,7 +26,7 @@
     "@novu/node": "^0.15.0",
     "@novu/notification-center": "^0.15.0",
     "@prisma/client": "^4.16.0",
-    "@retracedhq/logs-viewer": "2.4.6",
+    "@retracedhq/logs-viewer": "2.5.0",
     "@retracedhq/retraced": "0.6.3",
     "@stripe/stripe-js": "^1.54.0",
     "@tailwindcss/typography": "0.5.9",
