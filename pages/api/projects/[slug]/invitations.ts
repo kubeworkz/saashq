@@ -10,7 +10,8 @@ import {
   getInvitation,
   getInvitations,
 } from 'models/invitation';
-import { addProjectMember, getProject, isProjectAdmin } from 'models/project';
+import { addProjectMember, throwIfNoProjectAccess } from 'models/project';
+import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -47,27 +48,17 @@ export default async function handler(
   }
 }
 
-// Invite a user to an project
+// Invite a user to a project
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_invitation', 'create');
+
   const { email, role } = req.body;
-  const { slug } = req.query as { slug: string };
-
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const project = await getProject({ slug });
-
-  if (!(await isProjectAdmin(session.user.id, project.id))) {
-    throw new ApiError(400, 'Bad request');
-  }
 
   const invitationExists = await prisma.invitation.findFirst({
     where: {
       email,
-      projectId: project.id,
+      projectId: projectMember.projectId,
     },
   });
 
@@ -76,68 +67,48 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const invitation = await createInvitation({
-    projectId: project.id,
-    invitedBy: session.user.id,
+    projectId: projectMember.projectId,
+    invitedBy: projectMember.userId,
     email,
     role,
   });
 
-  await sendEvent(project.id, 'invitation.created', invitation);
+  await sendEvent(projectMember.projectId, 'invitation.created', invitation);
 
-  await sendProjectInviteEmail(project, invitation);
+  await sendProjectInviteEmail(projectMember.project, invitation);
 
   sendAudit({
     action: 'member.invitation.create',
     crud: 'c',
-    user: session.user,
-    project,
+    user: projectMember.user,
+    project: projectMember.project,
   });
 
   res.status(200).json({ data: invitation });
 };
 
-// Get all invitations for an organization
+// Get all invitations for a project
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query as { slug: string };
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_invitation', 'read');
 
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const project = await getProject({ slug });
-
-  if (!(await isProjectAdmin(session.user.id, project?.id))) {
-    throw new ApiError(400, 'Bad request');
-  }
-
-  const invitations = await getInvitations(project.id);
+  const invitations = await getInvitations(projectMember.projectId);
 
   res.status(200).json({ data: invitations });
 };
 
 // Delete an invitation
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug, id } = req.query as { slug: string; id: string };
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_invitation', 'delete');
 
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const project = await getProject({ slug });
-
-  if (!(await isProjectAdmin(session.user.id, project?.id))) {
-    throw new ApiError(400, 'Bad request');
-  }
+  const { id } = req.query as { id: string };
 
   const invitation = await getInvitation({ id });
 
   if (
-    invitation.invitedBy != session.user.id ||
-    invitation.projectId != project.id
+    invitation.invitedBy != projectMember.user.id ||
+    invitation.projectId != projectMember.projectId
   ) {
     throw new ApiError(
       400,
@@ -150,11 +121,11 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   sendAudit({
     action: 'member.invitation.delete',
     crud: 'd',
-    user: session.user,
-    project,
+    user: projectMember.user,
+    project: projectMember.project,
   });
 
-  await sendEvent(project.id, 'invitation.removed', invitation);
+  await sendEvent(projectMember.projectId, 'invitation.removed', invitation);
 
   res.status(200).json({ data: {} });
 };

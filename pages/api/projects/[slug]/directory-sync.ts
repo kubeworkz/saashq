@@ -1,9 +1,8 @@
 import env from '@/lib/env';
-import { ApiError } from '@/lib/errors';
 import jackson from '@/lib/jackson';
 import { sendAudit } from '@/lib/retraced';
-import { getSession } from '@/lib/session';
-import { getProject, isProjectMember } from 'models/project';
+import { throwIfNoProjectAccess } from 'models/project';
+import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -35,65 +34,48 @@ export default async function handler(
 }
 
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query as { slug: string };
-
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const project = await getProject({ slug });
-
-  if (!(await isProjectMember(session.user.id, project?.id))) {
-    throw new ApiError(400, 'Bad request');
-  }
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_dsync', 'read');
 
   const { directorySync } = await jackson();
 
   const { data, error } = await directorySync.directories.getByTenantAndProduct(
-    project.id,
+    projectMember.projectId,
     env.product
   );
 
   if (error) {
-    res.status(400).json({ error });
+    throw error;
   }
 
   res.status(200).json({ data });
 };
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_dsync', 'create');
+
   const { name, provider } = req.body;
-  const { slug } = req.query;
 
   const { directorySync } = await jackson();
-
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const project = await getProject({ slug: slug as string });
-
-  if (!(await isProjectMember(session.user.id, project?.id))) {
-    throw new ApiError(400, 'Bad request');
-  }
 
   const { data, error } = await directorySync.directories.create({
     name,
     type: provider,
-    tenant: project.id,
+    tenant: projectMember.projectId,
     product: env.product,
   });
+
+  if (error) {
+    throw error;
+  }
 
   sendAudit({
     action: 'dsync.connection.create',
     crud: 'c',
-    user: session.user,
-    project,
+    user: projectMember.user,
+    project: projectMember.project,
   });
 
-  res.status(201).json({ data, error });
+  res.status(201).json({ data });
 };

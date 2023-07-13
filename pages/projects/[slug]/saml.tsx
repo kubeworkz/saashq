@@ -28,14 +28,17 @@ const ProjectSSO: NextPageWithLayout = () => {
 
   const { isLoading, isError, project } = useProject(slug);
   const { samlConfig, mutateSamlConfig } = useSAMLConfig(slug);
+
   // Delete SSO Connection
   const deleteSsoConnection = async (connection: SAMLSSORecord | null) => {
     if (!connection) return;
+
     const { clientID, clientSecret } = connection;
     const params = new URLSearchParams({
       clientID,
       clientSecret,
     });
+
     const res = await fetch(`/api/projects/${slug}/saml?${params}`, {
       method: 'DELETE',
     });
@@ -56,12 +59,16 @@ const ProjectSSO: NextPageWithLayout = () => {
     }
   };
 
-  if (isLoading || !project) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!project) {
+    return <Error message="Project not found" />;
   }
 
   const connectionsAdded =
@@ -78,6 +85,8 @@ const ProjectSSO: NextPageWithLayout = () => {
               onClick={() => {
                 setVisible(!visible);
               }}
+              size="sm"
+              variant="outline"
             >
               {t('add-connection')}
             </Button>

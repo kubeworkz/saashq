@@ -1,9 +1,6 @@
-import {
-  RemoveProject,
-  ProjectSettings,
-  ProjectTab,
-} from '@/components/project';
 import { Error, Loading } from '@/components/shared';
+import { AccessControl } from '@/components/shared/AccessControl';
+import { RemoveProject, ProjectSettings, ProjectTab } from '@/components/project';
 import useProject from 'hooks/useProject';
 import type { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -16,19 +13,25 @@ const Settings: NextPageWithLayout = () => {
 
   const { isLoading, isError, project } = useProject(slug);
 
-  if (isLoading || !project) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!project) {
+    return <Error message="Project not found" />;
   }
 
   return (
     <>
       <ProjectTab activeTab="settings" project={project} />
       <ProjectSettings project={project} />
-      <RemoveProject project={project} />
+      <AccessControl resource="project" actions={['delete']}>
+        <RemoveProject project={project} />
+      </AccessControl>
     </>
   );
 };

@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-use-before-define
-import NextAuth, { DefaultSession } from 'next-auth';
+import type { Role } from '@prisma/client';
+import type { DefaultSession } from 'next-auth';
 
 declare module 'next-auth' {
   /**
@@ -8,6 +9,7 @@ declare module 'next-auth' {
   interface Session {
     user: DefaultSession['user'] & {
       id: string;
+      roles: { projectId: string; role: Role }[];
     };
   }
 

@@ -34,12 +34,16 @@ const ProjectMembers: NextPageWithLayout = () => {
   }, [project]);
 
   let existingproject;
-  if (isLoading || !project) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!project) {
+    return <Error message="Project not found" />;
   }
 
   const HandleCreateDatabase = async (id: string) => {

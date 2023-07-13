@@ -1,13 +1,13 @@
 import { ApiError } from '@/lib/errors';
 import { sendAudit } from '@/lib/retraced';
-import { getSession } from '@/lib/session';
 import {
   createWebhook,
   deleteWebhook,
   findOrCreateApp,
   listWebhooks,
 } from '@/lib/svix';
-import { getProject, isProjectMember } from 'models/project';
+import { throwIfNoProjectAccess } from 'models/project';
+import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { EndpointIn } from 'svix';
 
@@ -44,22 +44,15 @@ export default async function handler(
 
 // Create a Webhook endpoint
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query as { slug: string };
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_webhook', 'create');
+
   const { name, url, eventTypes } = req.body;
 
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const project = await getProject({ slug });
-
-  if (!(await isProjectMember(session.user.id, project.id))) {
-    throw new ApiError(400, 'Bad request.');
-  }
-
-  const app = await findOrCreateApp(project.name, project.id);
+  const app = await findOrCreateApp(
+    projectMember.project.name,
+    projectMember.project.id
+  );
 
   // TODO: The endpoint URL must be HTTPS.
 
@@ -82,8 +75,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   sendAudit({
     action: 'webhook.create',
     crud: 'c',
-    user: session.user,
-    project,
+    user: projectMember.user,
+    project: projectMember.project,
   });
 
   res.status(200).json({ data: endpoint });
@@ -91,21 +84,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Get all webhooks created by a project
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query as { slug: string };
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_webhook', 'read');
 
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const project = await getProject({ slug });
-
-  if (!(await isProjectMember(session.user.id, project.id))) {
-    throw new ApiError(400, 'Bad request.');
-  }
-
-  const app = await findOrCreateApp(project.name, project.id);
+  const app = await findOrCreateApp(
+    projectMember.project.name,
+    projectMember.project.id
+  );
 
   if (!app) {
     throw new ApiError(400, 'Bad request.');
@@ -118,27 +103,21 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Delete a webhook
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug, webhookId } = req.query as { slug: string; webhookId: string };
+  const projectMember = await throwIfNoProjectAccess(req, res);
+  throwIfNotAllowed(projectMember, 'project_webhook', 'delete');
 
-  const session = await getSession(req, res);
+  const { webhookId } = req.query as { webhookId: string };
 
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const project = await getProject({ slug });
-
-  if (!(await isProjectMember(session.user.id, project.id))) {
-    throw new ApiError(400, 'Bad request.');
-  }
-
-  const app = await findOrCreateApp(project.name, project.id);
+  const app = await findOrCreateApp(
+    projectMember.project.name,
+    projectMember.project.id
+  );
 
   if (!app) {
     throw new ApiError(400, 'Bad request.');
   }
 
-  if (app.uid != project.id) {
+  if (app.uid != projectMember.project.id) {
     throw new ApiError(400, 'Bad request.');
   }
 
@@ -147,8 +126,8 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   sendAudit({
     action: 'webhook.delete',
     crud: 'd',
-    user: session.user,
-    project,
+    user: projectMember.user,
+    project: projectMember.project,
   });
 
   res.status(200).json({ data: {} });
