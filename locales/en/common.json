@@ -164,6 +164,7 @@
   "project-removed-successfully": "Project removed successfully.",
   "leave-project-confirmation": "Are you sure you want to leave the project? You'll lose access to all resources and data associated with the project.",
   "all-products": "All Products",
+  "database": "Database",
   "new-project": "New Project",
   "profile": "Profile"
 }  
