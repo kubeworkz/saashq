@@ -30,7 +30,7 @@ const DirectorySync: NextPageWithLayout = () => {
   }
 
   if (!project) {
-    return <Error message="Project not found" />;
+    return <Error message={t('project-not-found')} />;
   }
 
   const directory =

@@ -50,7 +50,7 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   }
 
   if (!project) {
-    return <Error message="Project not found" />;
+    return <Error message={t('project-not-found')} />;
   }
 
   return (

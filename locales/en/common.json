@@ -166,5 +166,10 @@
   "all-products": "All Products",
   "database": "Database",
   "new-project": "New Project",
-  "profile": "Profile"
+  "profile": "Profile",
+  "profile-picture": "Profile picture",
+  "sso-connection-deleted": "SSO Connection deleted successfully",
+  "project-not-found": "Project not found",
+  "delete-sso-connection": "Delete SSO Connection",
+  "delete-sso-connection-confirmation": "Are you sure you want to delete this SSO Connection? This action can not be undone."
 }  
