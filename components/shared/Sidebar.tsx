@@ -106,6 +106,16 @@ const ProjectDropdown = () => {
 
   const menus = [
     {
+      id: 2,
+      name: t('projects'),
+      items: (projects || []).map((project) => ({
+        id: project.id,
+        name: project.name,
+        href: `/projects/${project.slug}/settings`,
+        icon: FolderIcon,
+      })),
+    },    
+    {
       id: 1,
       name: t('profile'),
       items: [
@@ -116,16 +126,6 @@ const ProjectDropdown = () => {
           icon: UserCircleIcon,
         },
       ],
-    },
-    {
-      id: 2,
-      name: t('projects'),
-      items: (projects || []).map((project) => ({
-        id: project.id,
-        name: project.name,
-        href: `/projects/${project.slug}/settings`,
-        icon: FolderIcon,
-      })),
     },
     {
       id: 3,

@@ -3,14 +3,15 @@ import { AccessControl } from '@/components/shared/AccessControl';
 import { RemoveProject, ProjectSettings, ProjectTab } from '@/components/project';
 import useProject from 'hooks/useProject';
 import type { GetServerSidePropsContext } from 'next';
+import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import type { NextPageWithLayout } from 'types';
 
 const Settings: NextPageWithLayout = () => {
   const router = useRouter();
+  const { t } = useTranslation('common');
   const { slug } = router.query as { slug: string };
-
   const { isLoading, isError, project } = useProject(slug);
 
   if (isLoading) {
@@ -22,7 +23,7 @@ const Settings: NextPageWithLayout = () => {
   }
 
   if (!project) {
-    return <Error message="Project not found" />;
+    return <Error message={t('project-not-found')} />;
   }
 
   return (

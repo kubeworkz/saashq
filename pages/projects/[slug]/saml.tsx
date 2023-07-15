@@ -55,7 +55,7 @@ const ProjectSSO: NextPageWithLayout = () => {
 
     if (data) {
       mutateSamlConfig();
-      toast.success('SSO Connection deleted successfully');
+      toast.success(t('sso-connection-deleted'));
     }
   };
 
@@ -68,7 +68,7 @@ const ProjectSSO: NextPageWithLayout = () => {
   }
 
   if (!project) {
-    return <Error message="Project not found" />;
+    return <Error message={t('project-not-found')} />;
   }
 
   const connectionsAdded =
@@ -180,15 +180,14 @@ const ProjectSSO: NextPageWithLayout = () => {
       </Card>
       <CreateConnection project={project} visible={visible} setVisible={setVisible} />
       <ConfirmationDialog
-        title="Delete SSO Connection"
+        title={t('delete-sso-connection')}
         visible={confirmationDialogVisible}
         onConfirm={() => deleteSsoConnection(selectedSsoConnection)}
         onCancel={() => setConfirmationDialogVisible(false)}
-        cancelText="Cancel"
-        confirmText="Delete SSO Connection"
+        cancelText={t('cancel')}
+        confirmText={t('delete-sso-connection')}
       >
-        Are you sure you want to delete this SSO Connection? This action can not
-        be undone.
+        {t('delete-sso-connection-confirmation')}
       </ConfirmationDialog>
     </>
   );

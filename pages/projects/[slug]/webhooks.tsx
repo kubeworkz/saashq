@@ -12,10 +12,10 @@ import type { NextPageWithLayout } from 'types';
 
 const WebhookList: NextPageWithLayout = () => {
   const router = useRouter();
-  const slug = router.query.slug as string;
   const { t } = useTranslation('common');
-
   const [visible, setVisible] = useState(false);
+
+  const slug = router.query.slug as string;
 
   const { isLoading, isError, project } = useProject(slug);
 
@@ -28,7 +28,7 @@ const WebhookList: NextPageWithLayout = () => {
   }
 
   if (!project) {
-    return <Error message="Project not found" />;
+    return <Error message={t('project-not-found')} />;
   }
 
   return (

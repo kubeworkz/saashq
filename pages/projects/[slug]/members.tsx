@@ -43,7 +43,7 @@ const ProjectMembers: NextPageWithLayout = () => {
   }
 
   if (!project) {
-    return <Error message="Project not found" />;
+    return <Error message={t('project-not-found')} />;
   }
 
   const HandleCreateDatabase = async (id: string) => {
